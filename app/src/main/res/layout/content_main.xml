@@ -8,6 +8,21 @@
     tools:context=".MainActivity"
     tools:showIn="@layout/activity_main">
 
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/container"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_margin="0dp"
+        app:layout_constraintBottom_toTopOf="@+id/bottom_navigation"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:paddingBottom="10dp"
+        android:background="#fff"
+        >
+
+    </android.support.constraint.ConstraintLayout>
+
     <TextView
         android:id="@+id/nowPlaying"
         android:layout_width="wrap_content"
@@ -22,18 +37,18 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
-        android:id="@+id/timer"
+    <Button
+        android:id="@+id/sleepTimer"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="100dp"
-        android:background="@drawable/solid_circle_with_border"
         android:gravity="center"
         android:text="@string/timer_text"
         android:textColor="@color/white_text"
         android:textSize="48sp"
+        android:background="@drawable/solid_circle_with_border"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -41,22 +56,28 @@
     <ToggleButton
         android:id="@+id/playButton"
         android:layout_width="70dp"
-        android:layout_height="wrap_content"
+        android:layout_height="70dp"
         android:layout_marginBottom="50dp"
         android:textOff="@string/play_button_text"
         android:textOn="@string/pause_button_text"
+        android:textColor="@color/white_text"
+        android:background="@drawable/solid_circle"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/nextButton"
-        app:layout_constraintStart_toEndOf="@id/previousButton" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
 
     <Button
         android:id="@+id/nextButton"
         android:layout_width="60dp"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="50dp"
+        android:layout_height="60dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
+        android:gravity="center"
         android:text="@string/next_button_text"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:textColor="@color/white_text"
+        android:background="@drawable/solid_circle"
+        app:layout_constraintTop_toTopOf="@id/playButton"
+        app:layout_constraintBottom_toBottomOf="@id/playButton"
         app:layout_constraintStart_toEndOf="@id/playButton" />
         <!--app:layout_constraintEnd_toStartOf="@id/shuffleButton"-->
 
@@ -64,12 +85,16 @@
     <Button
         android:id="@+id/previousButton"
         android:layout_width="60dp"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="50dp"
+        android:layout_height="60dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
+        android:gravity="center"
         android:text="@string/previous_button_text"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/playButton"
-        app:layout_constraintStart_toStartOf="parent"/>
+        android:textColor="@color/white_text"
+        android:background="@drawable/solid_circle"
+        app:layout_constraintTop_toTopOf="@id/playButton"
+        app:layout_constraintBottom_toBottomOf="@id/playButton"
+        app:layout_constraintEnd_toStartOf="@id/playButton"/>
         <!--app:layout_constraintStart_toEndOf="@id/repeatButton"-->
 
 <!--
@@ -104,25 +129,36 @@
         android:layout_marginEnd="50dp"
         android:layout_marginStart="50dp"
         app:layout_constraintBottom_toTopOf="@id/playButton"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
 
     <TextView
         android:id="@+id/currentTime"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/time_string"
+        android:text="@string/default_time_string"
         android:textSize="18sp"
-        app:layout_constraintStart_toStartOf="@id/seekBar"
-        app:layout_constraintTop_toBottomOf="@id/seekBar" />
+        app:layout_constraintTop_toBottomOf="@id/seekBar"
+        app:layout_constraintStart_toStartOf="@id/seekBar"/>
 
     <TextView
         android:id="@+id/totalTime"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/time_string"
+        android:text="@string/default_time_string"
         android:textSize="18sp"
-        app:layout_constraintEnd_toEndOf="@id/seekBar"
-        app:layout_constraintTop_toBottomOf="@id/seekBar" />
+        app:layout_constraintTop_toBottomOf="@id/seekBar"
+        app:layout_constraintEnd_toEndOf="@id/seekBar"/>
+
+
+
+    <android.support.design.widget.BottomNavigationView
+        android:id="@+id/bottom_navigation"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:menu="@menu/bottom_navigation_menu" />
 
 </android.support.constraint.ConstraintLayout>

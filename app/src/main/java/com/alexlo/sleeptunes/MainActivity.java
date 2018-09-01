@@ -1,9 +1,15 @@
 package com.alexlo.sleeptunes;
 
+import android.app.Fragment;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
+import android.support.design.widget.BottomNavigationView;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.SeekBar;
@@ -18,8 +24,11 @@ public class MainActivity extends AppCompatActivity {
     private MediaController mediaPlayer;
     private SeekBar seekbar;
     private boolean seeking = false;
-    private TextView currentTime;
-    private TextView totalTime;
+
+    private TextView mediaCurrentTime;
+    private TextView mediaTotalTime;
+    private Button sleepTimer;
+    private boolean countingDown = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,12 +39,13 @@ public class MainActivity extends AppCompatActivity {
         initializePlayer();
         initializeUI();
         initializeSeekBar();
+        initializeSleepTimer();
 
+        setupNavigationView();
     }
 
     private void initializePlayer() {
         mediaPlayer = new RawMediaController(context, files);
-        mediaPlayer.play();
     }
 
     private void initializeUI() {
@@ -45,11 +55,6 @@ public class MainActivity extends AppCompatActivity {
         final ToggleButton playButton = findViewById(R.id.playButton);
         final Button nextButton = findViewById(R.id.nextButton);
         final Button previousButton = findViewById(R.id.previousButton);
-        seekbar = findViewById(R.id.seekBar);
-        currentTime = findViewById(R.id.currentTime);
-        totalTime = findViewById(R.id.totalTime);
-
-        playButton.setChecked(true);
 
         playButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -90,6 +95,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void initializeSeekBar() {
+        seekbar = findViewById(R.id.seekBar);
+        mediaCurrentTime = findViewById(R.id.currentTime);
+        mediaTotalTime = findViewById(R.id.totalTime);
+
         seekbar.setMax(mediaPlayer.getDuration());
         seekbar.setProgress(0);
         seekbar.setOnSeekBarChangeListener(
@@ -109,7 +118,7 @@ public class MainActivity extends AppCompatActivity {
                         String mpTimeSec = String.valueOf(progress % 60);
                         String mpTimeMin = String.valueOf(progress / 60);
                         if(mpTimeSec.length() == 1) mpTimeSec = '0'+ mpTimeSec;
-                        currentTime.setText(getString(R.string.time_string, mpTimeMin, mpTimeSec));
+                        mediaCurrentTime.setText(getString(R.string.time_string, mpTimeMin, mpTimeSec));
                     }
                 }
 
@@ -120,8 +129,8 @@ public class MainActivity extends AppCompatActivity {
                 }
             });
 
-        final Handler handler = new Handler();
-        final Runnable r = new Runnable() {
+        final Handler seekBarHandler = new Handler();
+        final Runnable seekBarRunnable = new Runnable() {
             public void run() {
                 int mpTime = mediaPlayer.getTime();
                 String mpTimeSec = String.valueOf(mpTime % 60);
@@ -135,13 +144,106 @@ public class MainActivity extends AppCompatActivity {
 
                 if(!seeking) {
                     seekbar.setProgress(mpTime);
-                    currentTime.setText(getString(R.string.time_string, mpTimeMin, mpTimeSec));
-                    totalTime.setText(getString(R.string.time_string, mpDurationMin, mpDurationSec));
+                    mediaCurrentTime.setText(getString(R.string.time_string, mpTimeMin, mpTimeSec));
+                    mediaTotalTime.setText(getString(R.string.time_string, mpDurationMin, mpDurationSec));
                 }
-                handler.postDelayed(this, 1000);
+                seekBarHandler.postDelayed(this, 1000);
             }
         };
-        handler.postDelayed(r, 1000);
+        seekBarHandler.postDelayed(seekBarRunnable, 1000);
+    }
+
+    private void initializeSleepTimer() {
+        sleepTimer = findViewById(R.id.sleepTimer);
+
+        sleepTimer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                countingDown = !countingDown;
+            }
+        });
+
+        final Handler sleepTimerHandler = new Handler();
+        final Runnable seekTimerRunnable = new Runnable() {
+            public void run() {
+                if(countingDown) {
+                    String sleepTime = sleepTimer.getText().toString();
+                    int tempSec = Integer.parseInt(sleepTime.substring(3));
+                    int tempMin = Integer.parseInt(sleepTime.substring(0, 2));
+
+                    if (tempSec == 0 && tempMin == 0) {
+                        sleep();
+                    }
+
+                    tempSec--;
+                    if (tempSec < 0) {
+                        tempSec = 59;
+                        tempMin--;
+                    }
+
+                    String sleepSec = String.valueOf(tempSec);
+                    String sleepMin = String.valueOf(tempMin);
+                    if (sleepSec.length() == 1) sleepSec = '0' + sleepSec;
+                    if (sleepMin.length() == 1) sleepMin = '0' + sleepMin;
+
+                    sleepTimer.setText(getString(R.string.time_string, sleepMin, sleepSec));
+                }
+                sleepTimerHandler.postDelayed(this, 1000);
+            }
+        };
+        sleepTimerHandler.postDelayed(seekTimerRunnable, 1000);
+    }
+
+    private void sleep() {
+        finishAffinity();
+        System.exit(0);
+    }
+
+    private void setupNavigationView() {
+        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
+        if (bottomNavigationView != null) {
+            Menu menu = bottomNavigationView.getMenu();
+            selectFragment(menu.getItem(0));
+
+            bottomNavigationView.setOnNavigationItemSelectedListener(
+                new BottomNavigationView.OnNavigationItemSelectedListener() {
+                    public boolean onNavigationItemSelected(MenuItem item) {
+                        selectFragment(item);
+                        return false;
+                    }
+                });
+        }
+    }
+
+    private void selectFragment(MenuItem item) {
+        item.setChecked(true);
+
+        switch (item.getItemId()) {
+            case R.id.menu_main:
+                pushFragment(new MainFragment());
+                break;
+            case R.id.menu_sleep:
+                pushFragment(new SleepFragment());
+                break;
+            case R.id.menu_settings:
+                pushFragment(new SettingsFragment());
+                break;
+        }
+    }
+
+    private void pushFragment(Fragment fragment) {
+        if (fragment == null)
+            return;
+
+        FragmentManager fragmentManager = getFragmentManager();
+        if (fragmentManager != null) {
+            FragmentTransaction ft = fragmentManager.beginTransaction();
+            if (ft != null) {
+                ft.setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out);
+                ft.replace(R.id.container, fragment);
+                ft.commit();
+            }
+        }
     }
 
 //    @Override
