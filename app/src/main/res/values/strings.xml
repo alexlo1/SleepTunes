@@ -11,16 +11,11 @@
     <string name="pause_button_text">Pause</string>
     <string name="next_button_text">Next</string>
     <string name="previous_button_text">Prev</string>
-    <string name="shuffle_button_text">Shuffle</string>
-    <string name="repeat_button_text">Repeat</string>
     <string name="now_playing_text">Now Playing: %1$s</string>
     <string name="timer_text">20:00</string>
 
     <string name="default_time_string">0:00</string>
     <string name="time_string">%1$s:%2$s</string>
     <string name="title_activity_sleep_mode">SleepModeActivity</string>
-
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 </resources>
