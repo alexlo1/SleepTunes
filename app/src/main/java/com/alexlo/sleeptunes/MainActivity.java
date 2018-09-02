@@ -14,9 +14,13 @@ public class MainActivity extends AppCompatActivity {
 
     private Context context;
     private Fragment currentFragment;
+    private MediaPlayerFragment mediaPlayerFragment;
     private MainFragment mainFragment;
     private SleepFragment sleepFragment;
     private SettingsFragment settingsFragment;
+
+    private FragmentManager fragmentManager;
+    private FragmentTransaction ft;
 
     private static int[] files = {R.raw.test1, R.raw.test2, R.raw.test3};
     public MediaController mediaPlayer;
@@ -33,33 +37,39 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setupNavigationView() {
+        mediaPlayerFragment = new MediaPlayerFragment();
         mainFragment = new MainFragment();
         sleepFragment = new SleepFragment();
         settingsFragment = new SettingsFragment();
 
-        FragmentTransaction ft = getFragmentManager().beginTransaction();
+        fragmentManager = getFragmentManager();
+        ft = fragmentManager.beginTransaction();
         ft.add(R.id.container, mainFragment);
         ft.add(R.id.container, sleepFragment);
         ft.add(R.id.container, settingsFragment);
+        ft.add(R.id.media_player_container, mediaPlayerFragment);
+        ft.hide(mainFragment);
         ft.hide(sleepFragment);
         ft.hide(settingsFragment);
         ft.commit();
-        currentFragment = mainFragment;
 
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
-        if (bottomNavigationView != null) {
-            Menu menu = bottomNavigationView.getMenu();
+        Menu menu = bottomNavigationView.getMenu();
 
-            //selectFragment(menu.getItem(0));
+        currentFragment = mainFragment;
+        selectFragment(menu.getItem(0));
+        ft = fragmentManager.beginTransaction();
+        ft.show(mainFragment);
+        ft.commit();
 
-            bottomNavigationView.setOnNavigationItemSelectedListener(
-                new BottomNavigationView.OnNavigationItemSelectedListener() {
-                    public boolean onNavigationItemSelected(MenuItem item) {
-                        selectFragment(item);
-                        return false;
-                    }
-                });
-        }
+        bottomNavigationView.setOnNavigationItemSelectedListener(
+            new BottomNavigationView.OnNavigationItemSelectedListener() {
+                public boolean onNavigationItemSelected(MenuItem item) {
+                    selectFragment(item);
+                    return false;
+                }
+            });
+
     }
 
     private void selectFragment(MenuItem item) {
@@ -79,19 +89,13 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void pushFragment(Fragment fragment) {
-        if (fragment == null)
-            return;
-
-        FragmentManager fragmentManager = getFragmentManager();
-        if (fragmentManager != null) {
-            FragmentTransaction ft = fragmentManager.beginTransaction();
-            if (ft != null) {
-                ft.setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out);
-                ft.hide(currentFragment);
-                ft.show(fragment);
-                ft.commit();
-                currentFragment = fragment;
-            }
+        if(fragment != currentFragment) {
+            ft = fragmentManager.beginTransaction();
+            ft.setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out);
+            ft.hide(currentFragment);
+            ft.show(fragment);
+            ft.commit();
+            currentFragment = fragment;
         }
     }
 
