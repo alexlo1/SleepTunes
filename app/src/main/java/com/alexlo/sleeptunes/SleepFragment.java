@@ -35,7 +35,6 @@ public class SleepFragment extends Fragment {
         context = getActivity().getApplicationContext();
         active = true;
 
-        initializeUI();
         initializeSeekBar();
         initializeSleepTimer();
 
@@ -45,52 +44,6 @@ public class SleepFragment extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-    }
-
-    private void initializeUI() {
-        final TextView nowPlaying = rootView.findViewById(R.id.nowPlaying);
-        nowPlaying.setText(getString(R.string.now_playing_text, "test1"));
-
-        final ToggleButton playButton = rootView.findViewById(R.id.playButton);
-        final Button nextButton = rootView.findViewById(R.id.nextButton);
-        final Button previousButton = rootView.findViewById(R.id.previousButton);
-
-        playButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if(playButton.isChecked()) {
-                    activity.mediaPlayer.play();
-                } else {
-                    activity.mediaPlayer.pause();
-                }
-            }
-        });
-
-        nextButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                activity.mediaPlayer.next();
-                nowPlaying.setText(getString(R.string.now_playing_text, "test"+String.valueOf(activity.mediaPlayer.getCurrentFile()+1)));
-
-                if(playButton.isChecked()) {
-                    activity.mediaPlayer.play();
-                }
-                initializeSeekBar();
-            }
-        });
-
-        previousButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                activity.mediaPlayer.previous();
-                nowPlaying.setText(getString(R.string.now_playing_text, "test"+String.valueOf(activity.mediaPlayer.getCurrentFile()+1)));
-
-                if(playButton.isChecked()) {
-                    activity.mediaPlayer.play();
-                }
-                initializeSeekBar();
-            }
-        });
     }
 
     private void initializeSeekBar() {
@@ -147,11 +100,11 @@ public class SleepFragment extends Fragment {
                         mediaCurrentTime.setText(getString(R.string.time_string, mpTimeMin, mpTimeSec));
                         mediaTotalTime.setText(getString(R.string.time_string, mpDurationMin, mpDurationSec));
                     }
-                    seekBarHandler.postDelayed(this, 1000);
+                    seekBarHandler.postDelayed(this, 500);
                 }
             }
         };
-        seekBarHandler.postDelayed(seekBarRunnable, 1000);
+        seekBarHandler.postDelayed(seekBarRunnable, 500);
     }
 
     private void initializeSleepTimer() {
