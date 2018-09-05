@@ -1,15 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string-array name="entryvalues_list_preference">
-        <item>abc</item>
-        <item>bcd</item>
-    </string-array>
-    <string-array name="entries_list_preference">
-        <item>a</item>
-        <item>b</item>
-    </string-array>
 
     <string-array name="sleep_timer_time_entries">
+        <item>1 minute</item>
         <item>5 minutes</item>
         <item>10 minutes</item>
         <item>20 minutes</item>
@@ -17,13 +10,15 @@
         <item>45 minutes</item>
         <item>1 hour</item>
     </string-array>
+
     <string-array name="sleep_timer_time_entry_values">
-        <item>5:00</item>
-        <item>10:00</item>
-        <item>20:00</item>
-        <item>30:00</item>
-        <item>45:00</item>
-        <item>60:00</item>
+        <item>1</item>
+        <item>5</item>
+        <item>10</item>
+        <item>20</item>
+        <item>30</item>
+        <item>45</item>
+        <item>60</item>
     </string-array>
 
 </resources>

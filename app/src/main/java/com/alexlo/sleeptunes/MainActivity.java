@@ -7,10 +7,9 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
-import android.preference.Preference;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.design.widget.BottomNavigationView;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -40,6 +39,9 @@ public class MainActivity extends AppCompatActivity {
     private TextView mediaCurrentTime;
     private TextView mediaTotalTime;
 
+    private boolean countingDown;
+    private int sleepTimer = 1200;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,6 +55,7 @@ public class MainActivity extends AppCompatActivity {
         initializePlayer();
         initializeControls();
         initializeSeekBar();
+        initializeSleepTimer();
     }
 
     @Override
@@ -93,7 +96,6 @@ public class MainActivity extends AppCompatActivity {
                     return false;
                 }
             });
-
     }
 
     private void selectFragment(MenuItem item) {
@@ -126,8 +128,6 @@ public class MainActivity extends AppCompatActivity {
     private void initializePlayer() {
         mediaPlayer = new RawMediaController(context, files);
     }
-
-
 
     private void initializeControls() {
 
@@ -189,11 +189,7 @@ public class MainActivity extends AppCompatActivity {
                 public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                     if (fromUser && seeking) {
                         userSelectedPosition = progress;
-
-                        String mpTimeSec = String.valueOf(progress % 60);
-                        String mpTimeMin = String.valueOf(progress / 60);
-                        if(mpTimeSec.length() == 1) mpTimeSec = '0'+ mpTimeSec;
-                        mediaCurrentTime.setText(getString(R.string.time_string, mpTimeMin, mpTimeSec));
+                        mediaCurrentTime.setText(convertTime(progress, false));
                     }
                 }
 
@@ -208,25 +204,57 @@ public class MainActivity extends AppCompatActivity {
         final Runnable seekBarRunnable = new Runnable() {
             public void run() {
                 if(active) {
-                    int mpTime = mediaPlayer.getTime();
-                    String mpTimeSec = String.valueOf(mpTime % 60);
-                    String mpTimeMin = String.valueOf(mpTime / 60);
-                    if (mpTimeSec.length() == 1) mpTimeSec = '0' + mpTimeSec;
-
-                    int mpDuration = mediaPlayer.getDuration();
-                    String mpDurationSec = String.valueOf(mpDuration % 60);
-                    String mpDurationMin = String.valueOf(mpDuration / 60);
-                    if (mpDurationSec.length() == 1) mpDurationSec = '0' + mpDurationSec;
-
                     if (!seeking) {
-                        seekbar.setProgress(mpTime);
-                        mediaCurrentTime.setText(getString(R.string.time_string, mpTimeMin, mpTimeSec));
-                        mediaTotalTime.setText(getString(R.string.time_string, mpDurationMin, mpDurationSec));
+                        seekbar.setProgress(mediaPlayer.getTime());
+                        mediaCurrentTime.setText(convertTime(mediaPlayer.getTime(), false));
+                        mediaTotalTime.setText(convertTime(mediaPlayer.getDuration(), false));
                     }
                     seekBarHandler.postDelayed(this, 1000);
                 }
             }
         };
         seekBarHandler.postDelayed(seekBarRunnable, 1000);
+    }
+
+    private void initializeSleepTimer() {
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
+        sleepTimer = Integer.parseInt(sharedPref.getString("sleep_timer_time_key", "1200"));
+
+        final Handler sleepTimerHandler = new Handler();
+        final Runnable seekTimerRunnable = new Runnable() {
+            public void run() {
+                if(countingDown) {
+                    if(sleepTimer == 0) sleep();
+                    sleepTimer--;
+                }
+                sleepTimerHandler.postDelayed(this, 1000);
+            }
+        };
+        sleepTimerHandler.postDelayed(seekTimerRunnable, 1000);
+    }
+
+    private void sleep() {
+        finishAffinity();
+        System.exit(0);
+    }
+
+    public void flipCountDown() {
+        countingDown = !countingDown;
+    }
+
+    public boolean getCountDown() {
+        return countingDown;
+    }
+
+    public int getSleepTimer() {
+       return sleepTimer;
+    }
+
+    public String convertTime(int t, boolean addMinuteZero) {
+        String sec = String.valueOf(t % 60);
+        String min = String.valueOf(t / 60);
+        if (sec.length() == 1) sec = '0' + sec;
+        if (addMinuteZero && min.length() == 1) min = '0' + min;
+        return getString(R.string.time_string, min, sec);
     }
 }

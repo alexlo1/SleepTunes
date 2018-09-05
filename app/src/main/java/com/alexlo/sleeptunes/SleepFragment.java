@@ -25,7 +25,7 @@ public class SleepFragment extends Fragment {
     private boolean active = false;
 
     private Button sleepTimer;
-    private boolean countingDown = false;
+    private String previousSetting;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -46,59 +46,51 @@ public class SleepFragment extends Fragment {
 
     public void onHiddenChanged(boolean hidden) {
         if (!hidden) {
-            initializeSleepTimer();
-            Log.d("CHEESE", "ack");
-        } else {
-            Log.d("CHEESE", "flack");
+            updateSleepTimer();
         }
     }
 
     private void initializeSleepTimer() {
         sleepTimer = rootView.findViewById(R.id.sleepTimer);
+
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
-        String sleepTimerTime = sharedPref.getString("sleep_timer_time_key", "20:00");
-        sleepTimer.setText(sleepTimerTime);
+        String sleepTimerTime = sharedPref.getString("sleep_timer_time_key", "1200");
+        sleepTimer.setText(convertTime(Integer.parseInt(sleepTimerTime) * 60));
+        previousSetting = sleepTimerTime;
 
         sleepTimer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                countingDown = !countingDown;
+                activity.flipCountDown();
             }
         });
 
         final Handler sleepTimerHandler = new Handler();
         final Runnable seekTimerRunnable = new Runnable() {
             public void run() {
-                if(countingDown) {
-                    String sleepTime = sleepTimer.getText().toString();
-                    int tempSec = Integer.parseInt(sleepTime.substring(3));
-                    int tempMin = Integer.parseInt(sleepTime.substring(0, 2));
-
-                    if (tempSec == 0 && tempMin == 0) {
-                        sleep();
-                    }
-
-                    tempSec--;
-                    if (tempSec < 0) {
-                        tempSec = 59;
-                        tempMin--;
-                    }
-
-                    String sleepSec = String.valueOf(tempSec);
-                    String sleepMin = String.valueOf(tempMin);
-                    if (sleepSec.length() == 1) sleepSec = '0' + sleepSec;
-                    if (sleepMin.length() == 1) sleepMin = '0' + sleepMin;
-
-                    sleepTimer.setText(getString(R.string.time_string, sleepMin, sleepSec));
+                if(activity.getCountDown()) {
+                    sleepTimer.setText(convertTime(activity.getSleepTimer()));
                 }
-                sleepTimerHandler.postDelayed(this, 1000);
+                sleepTimerHandler.postDelayed(this, 500);
             }
         };
-        sleepTimerHandler.postDelayed(seekTimerRunnable, 1000);
+        sleepTimerHandler.postDelayed(seekTimerRunnable, 500);
     }
 
-    private void sleep() {
-        getActivity().finishAffinity();
-        System.exit(0);
+    private void updateSleepTimer() {
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
+        String sleepTimerTime = sharedPref.getString("sleep_timer_time_key", "1200");
+        if(previousSetting != sleepTimerTime && !activity.getCountDown()) {
+            // TODO remake sleep timer
+            previousSetting = sleepTimerTime;
+        }
+    }
+
+    private String convertTime(int t) {
+        String sec = String.valueOf(t % 60);
+        String min = String.valueOf(t / 60);
+        if (sec.length() == 1) sec = '0' + sec;
+        if (min.length() == 1) min = '0' + min;
+        return getString(R.string.time_string, min, sec);
     }
 }

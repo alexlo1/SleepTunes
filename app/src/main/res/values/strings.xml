@@ -35,5 +35,4 @@
     <string name="volume_fade_title">Volume fade</string>
     <string name="volume_fade_summary">Volume gradually decreases as sleep timer runs</string>
 
-
 </resources>
