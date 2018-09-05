@@ -12,6 +12,10 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
+/**
+ * Main page fragment
+ * Doesn't do much
+ */
 public class MainFragment extends Fragment {
 
     private MainActivity activity;
@@ -19,6 +23,15 @@ public class MainFragment extends Fragment {
     private View rootView;
     private boolean active = false;
 
+    private TextView nowPlaying;
+
+    /**
+     * Fragment instantiates it UI view
+     * @param inflater Inflates any views in the fragment
+     * @param container If non-null, parent view to attach to
+     * @param savedInstanceState If non-null, previous state to reconstruct
+     * @return Fragment's UI view
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_main, container, false);
@@ -31,12 +44,18 @@ public class MainFragment extends Fragment {
         return rootView;
     }
 
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
+    /**
+     * Initializes display elements
+     */
+    private void initializeDisplay() {
+        nowPlaying = activity.findViewById(R.id.nowPlaying);
+        updateNowPlaying();
     }
 
-    public void initializeDisplay() {
-
+    /**
+     * Updates the now playing text
+     */
+    private void updateNowPlaying() {
+        nowPlaying.setText(getString(R.string.now_playing_text, activity.mediaPlayer.getCurrentFileName()));
     }
 }

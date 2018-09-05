@@ -18,6 +18,11 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
+/**
+ * Main activity class
+ * App only has this one activity for simplicity, using fragments for different pages
+ * Contains media controls and bottom navigation menu
+ */
 public class MainActivity extends AppCompatActivity {
 
     private Context context;
@@ -26,11 +31,12 @@ public class MainActivity extends AppCompatActivity {
     private Fragment currentFragment;
     private MainFragment mainFragment;
     private SleepFragment sleepFragment;
-    public SettingsFragment settingsFragment;
+    private SettingsFragment settingsFragment;
 
     private FragmentManager fragmentManager;
     private FragmentTransaction ft;
 
+    // build in music files
     private static int[] files = {R.raw.test1, R.raw.test2, R.raw.test3};
     public MediaController mediaPlayer;
 
@@ -42,6 +48,10 @@ public class MainActivity extends AppCompatActivity {
     private boolean countingDown;
     private int sleepTimer = 1200;
 
+    /**
+     * Called when activity is starting, initializes layout
+     * @param savedInstanceState If non-null, previous state to reconstruct
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,6 +68,10 @@ public class MainActivity extends AppCompatActivity {
         initializeSleepTimer();
     }
 
+    /**
+     * Override the back button
+     * Now always displays the main fragment
+     */
     @Override
     public void onBackPressed() {
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
@@ -65,11 +79,15 @@ public class MainActivity extends AppCompatActivity {
         selectFragment(menu.getItem(0));
     }
 
+    /**
+     * Initializes the bottom navigation menu
+     */
     private void setupNavigationView() {
         mainFragment = new MainFragment();
         sleepFragment = new SleepFragment();
         settingsFragment = new SettingsFragment();
 
+        // create and hide all fragments
         fragmentManager = getFragmentManager();
         ft = fragmentManager.beginTransaction();
         ft.add(R.id.container, mainFragment);
@@ -83,6 +101,7 @@ public class MainActivity extends AppCompatActivity {
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
         Menu menu = bottomNavigationView.getMenu();
 
+        // show the main fragment to start
         currentFragment = mainFragment;
         selectFragment(menu.getItem(0));
         ft = fragmentManager.beginTransaction();
@@ -98,6 +117,10 @@ public class MainActivity extends AppCompatActivity {
             });
     }
 
+    /**
+     * Convert menu item into the corresponding fragment and push it
+     * @param item The navigation menu item selected
+     */
     private void selectFragment(MenuItem item) {
         item.setChecked(true);
 
@@ -114,6 +137,10 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Hides the current fragment page and displays the specified page
+     * @param fragment The fragment to be shown
+     */
     private void pushFragment(Fragment fragment) {
         if(fragment != currentFragment) {
             ft = fragmentManager.beginTransaction();
@@ -125,10 +152,16 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Initializes the media player class
+     */
     private void initializePlayer() {
         mediaPlayer = new RawMediaController(context, files);
     }
 
+    /**
+     * Initializes the media control buttons (play, pause, next, previous)
+     */
     private void initializeControls() {
 
         final ToggleButton playButton = findViewById(R.id.playButton);
@@ -169,6 +202,9 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * Initializes the seekbar that displays the current time on the audio currently being played
+     */
     private void initializeSeekBar() {
         seekbar = findViewById(R.id.seekBar);
         mediaCurrentTime = findViewById(R.id.currentTime);
@@ -176,6 +212,8 @@ public class MainActivity extends AppCompatActivity {
 
         seekbar.setMax(mediaPlayer.getDuration());
         seekbar.setProgress(0);
+
+        // allow the seekbar to be dragged, and update the media player current time accordingly
         seekbar.setOnSeekBarChangeListener(
             new SeekBar.OnSeekBarChangeListener() {
                 int userSelectedPosition = 0;
@@ -200,6 +238,7 @@ public class MainActivity extends AppCompatActivity {
                 }
             });
 
+        // update seekbar with media player progress every second
         final Handler seekBarHandler = new Handler();
         final Runnable seekBarRunnable = new Runnable() {
             public void run() {
@@ -216,10 +255,14 @@ public class MainActivity extends AppCompatActivity {
         seekBarHandler.postDelayed(seekBarRunnable, 1000);
     }
 
+    /**
+     * Initializes the sleep timer countdown
+     */
     private void initializeSleepTimer() {
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
         sleepTimer = Integer.parseInt(sharedPref.getString("sleep_timer_time_key", "1200")) * 60;
 
+        // update the sleep timer countdown every second
         final Handler sleepTimerHandler = new Handler();
         final Runnable seekTimerRunnable = new Runnable() {
             public void run() {
@@ -233,31 +276,59 @@ public class MainActivity extends AppCompatActivity {
         sleepTimerHandler.postDelayed(seekTimerRunnable, 1000);
     }
 
+    /**
+     * Quits the activity and closes the app
+     */
     private void sleep() {
         finishAffinity();
         System.exit(0);
     }
 
+    /**
+     * Inverts the value of countingDown
+     */
     public void flipCountDown() {
         countingDown = !countingDown;
     }
 
+    /**
+     * Mutator for countingDown
+     * @param b New boolean value
+     */
     public void setCountDown(boolean b) {
         countingDown = b;
     }
 
+    /**
+     * Accessor for countingDown
+     * @return Boolean detailing whether or not sleep timer is counting down
+     */
     public boolean getCountDown() {
         return countingDown;
     }
 
+    /**
+     * Mutator for sleepTimer
+     * @param t New time
+     */
     public void setSleepTimer(int t) {
         sleepTimer = t;
     }
 
+    /**
+     * Accessor for sleepTimer
+     * @return Time remaining on the sleep timer, in seconds
+     */
     public int getSleepTimer() {
        return sleepTimer;
     }
 
+    /**
+     * Converts an integer number of seconds into a time string
+     * @param t Integer number of seconds
+     * @param addMinuteZero Boolean detailing whether or not to add a 0 to x:xx, i.e. 0x:xx
+     * @return String in the form {min}:{sec} (x:xx or xx:xx)
+     */
     public String convertTime(int t, boolean addMinuteZero) {
         String sec = String.valueOf(t % 60);
         String min = String.valueOf(t / 60);

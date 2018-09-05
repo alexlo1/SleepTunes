@@ -4,6 +4,9 @@ import android.content.Context;
 import android.media.MediaPlayer;
 import android.util.Log;
 
+/**
+ * Media controller for raw media files (build into app)
+ */
 public class RawMediaController implements MediaController {
 
     private static final String TAG = "RawMediaController";
@@ -13,12 +16,18 @@ public class RawMediaController implements MediaController {
     private static int[] files = {R.raw.test1, R.raw.test2, R.raw.test3};
     private static int currentFile = 0;
 
+    /**
+     * Constructor
+     * @param context Context of the activity
+     * @param files List of file ids to play through
+     */
     public RawMediaController(Context context, int[] files) {
         this.context = context.getApplicationContext();
         this.files = files;
         initializeMediaPlayer();
     }
 
+    /** Initialize the media player */
     public void initializeMediaPlayer() {
         Log.d(TAG, "Initializing media player");
         mp = MediaPlayer.create(context, files[currentFile]);
@@ -32,6 +41,7 @@ public class RawMediaController implements MediaController {
         });
     }
 
+    /** Start/resume playing media */
     public void play() {
         if (mp != null && !mp.isPlaying()) {
             Log.d(TAG, "Start/Resume playing media");
@@ -39,6 +49,7 @@ public class RawMediaController implements MediaController {
         }
     }
 
+    /** Pause currently playing media */
     public void pause() {
         if (mp != null && mp.isPlaying()) {
             Log.d(TAG, "Pausing media");
@@ -46,6 +57,7 @@ public class RawMediaController implements MediaController {
         }
     }
 
+    /** Skip to next media file */
     public void next() {
         if (mp != null) {
             currentFile = (currentFile + 1) % files.length;
@@ -54,6 +66,7 @@ public class RawMediaController implements MediaController {
         }
     }
 
+    /** Rewind to beginning of media file or skip to previous media file*/
     public void previous() {
         if (mp != null) {
             Log.d(TAG, String.valueOf(getTime()));
@@ -65,6 +78,7 @@ public class RawMediaController implements MediaController {
         }
     }
 
+    /** Stops and clears current media */
     public void stop() {
         if (mp != null) {
             Log.d(TAG, "Stopping media");
@@ -74,10 +88,18 @@ public class RawMediaController implements MediaController {
         }
     }
 
+    /**
+     * Jump to specified time in media file
+     * @param secs Time to jump to in seconds
+     */
     public void seekTo(int secs) {
         mp.seekTo(secs * 1000);
     }
 
+    /**
+     * Accessor for current media file time
+     * @return Current media time
+     */
     public int getTime() {
         if(mp != null) {
             return mp.getCurrentPosition() / 1000;
@@ -86,6 +108,10 @@ public class RawMediaController implements MediaController {
         }
     }
 
+    /**
+     * Accessor for current media file duration
+     * @return Current media duration
+     */
     public int getDuration() {
         if(mp != null) {
             return mp.getDuration() / 1000;
@@ -94,10 +120,18 @@ public class RawMediaController implements MediaController {
         }
     }
 
+    /**
+     * Accessor for current media file id
+     * @return Current media id
+     */
     public int getCurrentFile() {
         return currentFile;
     }
 
+    /**
+     * Accessor for current media file name
+     * @return Current media name
+     */
     public String getCurrentFileName() {
         return "test"+(currentFile+1);
     }
