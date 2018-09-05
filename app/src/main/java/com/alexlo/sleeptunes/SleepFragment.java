@@ -5,16 +5,11 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
-import android.preference.Preference;
 import android.preference.PreferenceManager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.SeekBar;
-import android.widget.TextView;
-import android.widget.ToggleButton;
 
 public class SleepFragment extends Fragment {
 
@@ -25,6 +20,7 @@ public class SleepFragment extends Fragment {
     private boolean active = false;
 
     private Button sleepTimer;
+    private Button resetTimer;
     private String previousSetting;
 
     @Override
@@ -35,6 +31,7 @@ public class SleepFragment extends Fragment {
         active = true;
 
         initializeSleepTimer();
+        initializeResetButton();
 
         return rootView;
     }
@@ -45,18 +42,13 @@ public class SleepFragment extends Fragment {
     }
 
     public void onHiddenChanged(boolean hidden) {
-        if (!hidden) {
-            updateSleepTimer();
-        }
+        if(!hidden) updateSleepTimer();
     }
 
     private void initializeSleepTimer() {
         sleepTimer = rootView.findViewById(R.id.sleepTimer);
-
-        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
-        String sleepTimerTime = sharedPref.getString("sleep_timer_time_key", "1200");
-        sleepTimer.setText(convertTime(Integer.parseInt(sleepTimerTime) * 60));
-        previousSetting = sleepTimerTime;
+        sleepTimer.setText(convertTime(Integer.parseInt(getDurationPreference()) * 60));
+        previousSetting = getDurationPreference();
 
         sleepTimer.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -78,12 +70,28 @@ public class SleepFragment extends Fragment {
     }
 
     private void updateSleepTimer() {
-        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
-        String sleepTimerTime = sharedPref.getString("sleep_timer_time_key", "1200");
-        if(previousSetting != sleepTimerTime && !activity.getCountDown()) {
-            // TODO remake sleep timer
-            previousSetting = sleepTimerTime;
+        if(previousSetting != getDurationPreference() && !activity.getCountDown()) {
+            activity.setSleepTimer(Integer.parseInt(getDurationPreference()) * 60);
+            sleepTimer.setText(convertTime(activity.getSleepTimer()));
+            previousSetting = getDurationPreference();
         }
+    }
+
+    private void initializeResetButton() {
+        resetTimer = rootView.findViewById(R.id.resetSleepTimer);
+        resetTimer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                activity.setSleepTimer(Integer.parseInt(getDurationPreference()) * 60);
+                activity.setCountDown(false);
+                sleepTimer.setText(convertTime(Integer.parseInt(getDurationPreference()) * 60));
+            }
+        });
+    }
+
+    private String getDurationPreference() {
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
+        return sharedPref.getString("sleep_timer_time_key", "1200");
     }
 
     private String convertTime(int t) {

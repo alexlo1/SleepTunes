@@ -218,7 +218,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void initializeSleepTimer() {
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
-        sleepTimer = Integer.parseInt(sharedPref.getString("sleep_timer_time_key", "1200"));
+        sleepTimer = Integer.parseInt(sharedPref.getString("sleep_timer_time_key", "1200")) * 60;
 
         final Handler sleepTimerHandler = new Handler();
         final Runnable seekTimerRunnable = new Runnable() {
@@ -242,8 +242,16 @@ public class MainActivity extends AppCompatActivity {
         countingDown = !countingDown;
     }
 
+    public void setCountDown(boolean b) {
+        countingDown = b;
+    }
+
     public boolean getCountDown() {
         return countingDown;
+    }
+
+    public void setSleepTimer(int t) {
+        sleepTimer = t;
     }
 
     public int getSleepTimer() {
