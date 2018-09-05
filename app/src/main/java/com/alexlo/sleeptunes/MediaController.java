@@ -10,4 +10,5 @@ public interface MediaController {
     int getTime();
     int getDuration();
     int getCurrentFile();
+    String getCurrentFileName();
 }

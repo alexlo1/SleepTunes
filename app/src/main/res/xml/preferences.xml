@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceCategory
+        android:title="@string/sleep_timer_settings_title">
+
+        <ListPreference
+            android:key="sleep_timer_time_key"
+            android:title="@string/sleep_timer_time_title"
+            android:summary="@string/sleep_timer_time_summary"
+            android:entries="@array/sleep_timer_time_entries"
+            android:entryValues="@array/sleep_timer_time_entry_values"
+            android:dialogTitle="@string/sleep_timer_time_dialog_title" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:title="@string/display_settings_title">
+
+        <CheckBoxPreference
+            android:key="dark_mode_key"
+            android:title="@string/dark_mode_title"
+            android:summary="@string/dark_mode_summary" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:title="@string/audio_settings_title">
+
+        <CheckBoxPreference
+            android:key="volume_fade_key"
+            android:title="@string/volume_fade_title"
+            android:summary="@string/volume_fade_summary" />
+
+    </PreferenceCategory>
+
+</PreferenceScreen>

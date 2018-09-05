@@ -97,4 +97,8 @@ public class RawMediaController implements MediaController {
     public int getCurrentFile() {
         return currentFile;
     }
+
+    public String getCurrentFileName() {
+        return "test"+(currentFile+1);
+    }
 }

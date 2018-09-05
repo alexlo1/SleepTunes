@@ -2,23 +2,38 @@
     <string name="app_name">SleepTunes</string>
     <string name="action_settings">Settings</string>
 
+    <!-- Navigation Menu -->
     <string name="menu_main">Main</string>
     <string name="menu_sleep">Sleep</string>
     <string name="menu_settings">Settings</string>
 
-
+    <!-- Media Controls -->
     <string name="play_button_text">Play</string>
     <string name="pause_button_text">Pause</string>
     <string name="next_button_text">Next</string>
     <string name="previous_button_text">Prev</string>
-    <string name="now_playing_text">Now Playing: %1$s</string>
-    <string name="timer_text">20:00</string>
-
     <string name="default_time_string">0:00</string>
     <string name="time_string">%1$s:%2$s</string>
-    <string name="title_activity_sleep_mode">SleepModeActivity</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <!--Now Playing-->
+    <string name="now_playing_text">Now Playing: %1$s</string>
+
+    <!-- Sleep Timer-->
+    <string name="sleep_timer_text">20:00</string>
+
+    <!-- Settings Strings -->
+    <string name="sleep_timer_settings_title">Sleep Timer</string>
+    <string name="sleep_timer_time_title">Sleep Timer Duration</string>
+    <string name="sleep_timer_time_summary">Sets the duration of the sleep timer</string>
+    <string name="sleep_timer_time_dialog_title">Sleep Timer Duration</string>
+
+    <string name="display_settings_title">Display</string>
+    <string name="dark_mode_title">Night Mode</string>
+    <string name="dark_mode_summary">Turns on a dark theme</string>
+
+    <string name="audio_settings_title">Audio</string>
+    <string name="volume_fade_title">Volume fade</string>
+    <string name="volume_fade_summary">Volume gradually decreases as sleep timer runs</string>
+
 
 </resources>

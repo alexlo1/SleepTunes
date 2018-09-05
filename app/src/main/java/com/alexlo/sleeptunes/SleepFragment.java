@@ -2,8 +2,12 @@ package com.alexlo.sleeptunes;
 
 import android.app.Fragment;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
+import android.preference.Preference;
+import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,22 +24,16 @@ public class SleepFragment extends Fragment {
     private View rootView;
     private boolean active = false;
 
-    private SeekBar seekbar;
-    private boolean seeking = false;
-
-    private TextView mediaCurrentTime;
-    private TextView mediaTotalTime;
     private Button sleepTimer;
     private boolean countingDown = false;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        rootView = inflater.inflate(R.layout.fragment_main, container, false);
+        rootView = inflater.inflate(R.layout.fragment_sleep, container, false);
         activity = (MainActivity) getActivity();
         context = getActivity().getApplicationContext();
         active = true;
 
-        initializeSeekBar();
         initializeSleepTimer();
 
         return rootView;
@@ -46,69 +44,20 @@ public class SleepFragment extends Fragment {
         super.onDestroyView();
     }
 
-    private void initializeSeekBar() {
-        seekbar = rootView.findViewById(R.id.seekBar);
-        mediaCurrentTime = rootView.findViewById(R.id.currentTime);
-        mediaTotalTime = rootView.findViewById(R.id.totalTime);
-
-        seekbar.setMax(activity.mediaPlayer.getDuration());
-        seekbar.setProgress(0);
-        seekbar.setOnSeekBarChangeListener(
-                new SeekBar.OnSeekBarChangeListener() {
-                    int userSelectedPosition = 0;
-
-                    @Override
-                    public void onStartTrackingTouch(SeekBar seekBar) {
-                        seeking = true;
-                    }
-
-                    @Override
-                    public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                        if (fromUser && seeking) {
-                            userSelectedPosition = progress;
-
-                            String mpTimeSec = String.valueOf(progress % 60);
-                            String mpTimeMin = String.valueOf(progress / 60);
-                            if(mpTimeSec.length() == 1) mpTimeSec = '0'+ mpTimeSec;
-                            mediaCurrentTime.setText(getString(R.string.time_string, mpTimeMin, mpTimeSec));
-                        }
-                    }
-
-                    @Override
-                    public void onStopTrackingTouch(SeekBar seekBar) {
-                        seeking = false;
-                        activity.mediaPlayer.seekTo(userSelectedPosition);
-                    }
-                });
-
-        final Handler seekBarHandler = new Handler();
-        final Runnable seekBarRunnable = new Runnable() {
-            public void run() {
-                if(active) {
-                    int mpTime = activity.mediaPlayer.getTime();
-                    String mpTimeSec = String.valueOf(mpTime % 60);
-                    String mpTimeMin = String.valueOf(mpTime / 60);
-                    if (mpTimeSec.length() == 1) mpTimeSec = '0' + mpTimeSec;
-
-                    int mpDuration = activity.mediaPlayer.getDuration();
-                    String mpDurationSec = String.valueOf(mpDuration % 60);
-                    String mpDurationMin = String.valueOf(mpDuration / 60);
-                    if (mpDurationSec.length() == 1) mpDurationSec = '0' + mpDurationSec;
-
-                    if (!seeking) {
-                        seekbar.setProgress(mpTime);
-                        mediaCurrentTime.setText(getString(R.string.time_string, mpTimeMin, mpTimeSec));
-                        mediaTotalTime.setText(getString(R.string.time_string, mpDurationMin, mpDurationSec));
-                    }
-                    seekBarHandler.postDelayed(this, 500);
-                }
-            }
-        };
-        seekBarHandler.postDelayed(seekBarRunnable, 500);
+    public void onHiddenChanged(boolean hidden) {
+        if (!hidden) {
+            initializeSleepTimer();
+            Log.d("CHEESE", "ack");
+        } else {
+            Log.d("CHEESE", "flack");
+        }
     }
 
     private void initializeSleepTimer() {
         sleepTimer = rootView.findViewById(R.id.sleepTimer);
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
+        String sleepTimerTime = sharedPref.getString("sleep_timer_time_key", "20:00");
+        sleepTimer.setText(sleepTimerTime);
 
         sleepTimer.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -152,5 +101,4 @@ public class SleepFragment extends Fragment {
         getActivity().finishAffinity();
         System.exit(0);
     }
-
 }
