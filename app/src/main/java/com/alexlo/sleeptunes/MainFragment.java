@@ -4,6 +4,7 @@ import android.app.Fragment;
 import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -48,14 +49,21 @@ public class MainFragment extends Fragment {
      * Initializes display elements
      */
     private void initializeDisplay() {
-        nowPlaying = activity.findViewById(R.id.nowPlaying);
+        nowPlaying = rootView.findViewById(R.id.nowPlaying);
         updateNowPlaying();
     }
 
     /**
-     * Updates the now playing text
+     * Updates the now playing text every 0.1 seconds
      */
     private void updateNowPlaying() {
-        nowPlaying.setText(getString(R.string.now_playing_text, activity.mediaPlayer.getCurrentFileName()));
+        final Handler nowPlayingHandler = new Handler();
+        final Runnable nowPlayingRunnable = new Runnable() {
+            public void run() {
+                nowPlaying.setText(activity.mediaPlayer.getCurrentFileName());
+                nowPlayingHandler.postDelayed(this, 100);
+            }
+        };
+        nowPlayingHandler.postDelayed(nowPlayingRunnable, 100);
     }
 }

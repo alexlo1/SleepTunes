@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
 
 /**
  * Sleep page fragment
@@ -25,6 +26,7 @@ public class SleepFragment extends Fragment {
     private Button sleepTimer;
     private Button resetTimer;
     private String previousSetting;
+    private TextView nowPlaying;
 
     /**
      * Fragment instantiates it UI view
@@ -42,6 +44,7 @@ public class SleepFragment extends Fragment {
 
         initializeSleepTimer();
         initializeResetButton();
+        initializeNowPlaying();
 
         return rootView;
     }
@@ -69,17 +72,17 @@ public class SleepFragment extends Fragment {
             }
         });
 
-        // update sleep timer display every half second (for consistency)
+        // update sleep timer display every 0.1 seconds
         final Handler sleepTimerHandler = new Handler();
         final Runnable seekTimerRunnable = new Runnable() {
             public void run() {
                 if(activity.getCountDown()) {
                     sleepTimer.setText(convertTime(activity.getSleepTimer()));
                 }
-                sleepTimerHandler.postDelayed(this, 500);
+                sleepTimerHandler.postDelayed(this, 100);
             }
         };
-        sleepTimerHandler.postDelayed(seekTimerRunnable, 500);
+        sleepTimerHandler.postDelayed(seekTimerRunnable, 100);
     }
 
     /**
@@ -106,6 +109,21 @@ public class SleepFragment extends Fragment {
                 sleepTimer.setText(convertTime(Integer.parseInt(getDurationPreference()) * 60));
             }
         });
+    }
+
+    /**
+     * Updates the now playing text every 0.1 seconds
+     */
+    private void initializeNowPlaying() {
+        nowPlaying = rootView.findViewById(R.id.nowPlaying);
+        final Handler nowPlayingHandler = new Handler();
+        final Runnable nowPlayingRunnable = new Runnable() {
+            public void run() {
+                nowPlaying.setText(activity.mediaPlayer.getCurrentFileName());
+                nowPlayingHandler.postDelayed(this, 100);
+            }
+        };
+        nowPlayingHandler.postDelayed(nowPlayingRunnable, 100);
     }
 
     /**

@@ -37,7 +37,7 @@ public class MainActivity extends AppCompatActivity {
     private FragmentTransaction ft;
 
     // build in music files
-    private static int[] files = {R.raw.test1, R.raw.test2, R.raw.test3};
+    private static int[] files = {R.raw.the_name_of_life, R.raw.promise_of_the_world, R.raw.path_of_the_wind, R.raw.a_town_with_an_ocean_view};
     public MediaController mediaPlayer;
 
     private SeekBar seekbar;
@@ -60,12 +60,12 @@ public class MainActivity extends AppCompatActivity {
 
         active = true;
 
-        setupNavigationView();
-
         initializePlayer();
         initializeControls();
         initializeSeekBar();
         initializeSleepTimer();
+
+        setupNavigationView();
     }
 
     /**
@@ -238,7 +238,7 @@ public class MainActivity extends AppCompatActivity {
                 }
             });
 
-        // update seekbar with media player progress every second
+        // update seekbar with media player progress every 0.1 seconds
         final Handler seekBarHandler = new Handler();
         final Runnable seekBarRunnable = new Runnable() {
             public void run() {
@@ -248,11 +248,11 @@ public class MainActivity extends AppCompatActivity {
                         mediaCurrentTime.setText(convertTime(mediaPlayer.getTime(), false));
                         mediaTotalTime.setText(convertTime(mediaPlayer.getDuration(), false));
                     }
-                    seekBarHandler.postDelayed(this, 1000);
+                    seekBarHandler.postDelayed(this, 100);
                 }
             }
         };
-        seekBarHandler.postDelayed(seekBarRunnable, 1000);
+        seekBarHandler.postDelayed(seekBarRunnable, 100);
     }
 
     /**

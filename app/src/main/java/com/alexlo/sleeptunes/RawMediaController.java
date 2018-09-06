@@ -9,11 +9,10 @@ import android.util.Log;
  */
 public class RawMediaController implements MediaController {
 
-    private static final String TAG = "RawMediaController";
-
     private final Context context;
     private static MediaPlayer mp;
-    private static int[] files = {R.raw.test1, R.raw.test2, R.raw.test3};
+    private static int[] files = {R.raw.the_name_of_life, R.raw.promise_of_the_world, R.raw.path_of_the_wind, R.raw.a_town_with_an_ocean_view};
+    private static String[] filenames = {"The Name of Life", "Promise of the World", "Path of the Wind", "A Town with an Ocean View"};
     private static int currentFile = 0;
 
     /**
@@ -29,7 +28,6 @@ public class RawMediaController implements MediaController {
 
     /** Initialize the media player */
     public void initializeMediaPlayer() {
-        Log.d(TAG, "Initializing media player");
         mp = MediaPlayer.create(context, files[currentFile]);
         mp.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
             @Override
@@ -44,7 +42,6 @@ public class RawMediaController implements MediaController {
     /** Start/resume playing media */
     public void play() {
         if (mp != null && !mp.isPlaying()) {
-            Log.d(TAG, "Start/Resume playing media");
             mp.start();
         }
     }
@@ -52,7 +49,6 @@ public class RawMediaController implements MediaController {
     /** Pause currently playing media */
     public void pause() {
         if (mp != null && mp.isPlaying()) {
-            Log.d(TAG, "Pausing media");
             mp.pause();
         }
     }
@@ -69,7 +65,6 @@ public class RawMediaController implements MediaController {
     /** Rewind to beginning of media file or skip to previous media file*/
     public void previous() {
         if (mp != null) {
-            Log.d(TAG, String.valueOf(getTime()));
             if (getTime() <= 3) {
                 currentFile = (currentFile + files.length - 1) % files.length;
             }
@@ -81,7 +76,6 @@ public class RawMediaController implements MediaController {
     /** Stops and clears current media */
     public void stop() {
         if (mp != null) {
-            Log.d(TAG, "Stopping media");
             mp.stop();
             mp.release();
             mp = null;
@@ -133,6 +127,6 @@ public class RawMediaController implements MediaController {
      * @return Current media name
      */
     public String getCurrentFileName() {
-        return "test"+(currentFile+1);
+        return filenames[currentFile];
     }
 }

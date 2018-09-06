@@ -16,7 +16,7 @@
     <string name="time_string">%1$s:%2$s</string>
 
     <!--Now Playing-->
-    <string name="now_playing_text">Now Playing: %1$s</string>
+    <string name="now_playing">Now Playing:</string>
 
     <!-- Sleep Timer-->
     <string name="sleep_timer_text">20:00</string>
@@ -35,6 +35,5 @@
     <string name="audio_settings_title">Audio</string>
     <string name="volume_fade_title">Volume fade</string>
     <string name="volume_fade_summary">Volume gradually decreases as sleep timer runs</string>
-
 
 </resources>
