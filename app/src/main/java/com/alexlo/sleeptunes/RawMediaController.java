@@ -7,22 +7,23 @@ import android.util.Log;
 /**
  * Media controller for raw media files (build into app)
  */
-public class RawMediaController implements MediaController {
+public class RawMediaController extends MediaController {
 
     private final Context context;
-    private static MediaPlayer mp;
-    private static int[] files = {R.raw.the_name_of_life, R.raw.promise_of_the_world, R.raw.path_of_the_wind, R.raw.a_town_with_an_ocean_view};
-    private static String[] filenames = {"The Name of Life", "Promise of the World", "Path of the Wind", "A Town with an Ocean View"};
-    private static int currentFile = 0;
+    private int[] files;
+    private String[] filenames;
+    private int currentFile = 0;
 
     /**
      * Constructor
      * @param context Context of the activity
      * @param files List of file ids to play through
+     * @param filenames List of file names
      */
-    public RawMediaController(Context context, int[] files) {
+    public RawMediaController(Context context, int[] files, String[] filenames) {
         this.context = context.getApplicationContext();
         this.files = files;
+        this.filenames = filenames;
         initializeMediaPlayer();
     }
 
@@ -37,20 +38,6 @@ public class RawMediaController implements MediaController {
                 play();
             }
         });
-    }
-
-    /** Start/resume playing media */
-    public void play() {
-        if (mp != null && !mp.isPlaying()) {
-            mp.start();
-        }
-    }
-
-    /** Pause currently playing media */
-    public void pause() {
-        if (mp != null && mp.isPlaying()) {
-            mp.pause();
-        }
     }
 
     /** Skip to next media file */
@@ -70,47 +57,6 @@ public class RawMediaController implements MediaController {
             }
             stop();
             initializeMediaPlayer();
-        }
-    }
-
-    /** Stops and clears current media */
-    public void stop() {
-        if (mp != null) {
-            mp.stop();
-            mp.release();
-            mp = null;
-        }
-    }
-
-    /**
-     * Jump to specified time in media file
-     * @param secs Time to jump to in seconds
-     */
-    public void seekTo(int secs) {
-        mp.seekTo(secs * 1000);
-    }
-
-    /**
-     * Accessor for current media file time
-     * @return Current media time
-     */
-    public int getTime() {
-        if(mp != null) {
-            return mp.getCurrentPosition() / 1000;
-        } else {
-            return -1;
-        }
-    }
-
-    /**
-     * Accessor for current media file duration
-     * @return Current media duration
-     */
-    public int getDuration() {
-        if(mp != null) {
-            return mp.getDuration() / 1000;
-        } else {
-            return -1;
         }
     }
 

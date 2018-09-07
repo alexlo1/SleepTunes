@@ -1,6 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <string-array name="media_source_entries">
+        <item>Device Content</item>
+        <item>Studio Ghibli Piano</item>
+    </string-array>
+
+    <string-array name="media_source_entry_values">
+        <item>device</item>
+        <item>ghibli</item>
+    </string-array>
+
     <string-array name="sleep_timer_time_entries">
         <item>1 minute</item>
         <item>5 minutes</item>

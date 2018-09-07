@@ -1,53 +1,85 @@
 package com.alexlo.sleeptunes;
 
-/** Media controller interface */
-public interface MediaController {
+import android.media.MediaPlayer;
 
-    /** Initialize the media player */
-    void initializeMediaPlayer();
+/** Media controller interface */
+public abstract class MediaController {
+
+    protected MediaPlayer mp;
 
     /** Start/resume playing media */
-    void play();
+    public void play() {
+        if (mp != null && !mp.isPlaying()) {
+            mp.start();
+        }
+    }
 
     /** Pause currently playing media */
-    void pause();
-
-    /** Skip to next media file */
-    void next();
-
-    /** Rewind to beginning of media file or skip to previous media file*/
-    void previous();
+    public void pause() {
+        if (mp != null && mp.isPlaying()) {
+            mp.pause();
+        }
+    }
 
     /** Stops and clears current media */
-    void stop();
+    public void stop() {
+        if (mp != null) {
+            mp.stop();
+            mp.release();
+            mp = null;
+        }
+    }
 
     /**
      * Jump to specified time in media file
      * @param secs Time to jump to in seconds
      */
-    void seekTo(int secs);
+    public void seekTo(int secs) {
+        mp.seekTo(secs * 1000);
+    }
 
     /**
      * Accessor for current media file time
-     * @return Current media time
+     * @return Current media time in seconds
      */
-    int getTime();
+    public int getTime() {
+        if(mp != null) {
+            return mp.getCurrentPosition() / 1000;
+        } else {
+            return -1;
+        }
+    }
 
     /**
      * Accessor for current media file duration
-     * @return Current media duration
+     * @return Current media duration in seconds
      */
-    int getDuration();
+    public int getDuration() {
+        if(mp != null) {
+            return mp.getDuration() / 1000;
+        } else {
+            return -1;
+        }
+    }
+
+    /** Initialize the media player */
+    abstract void initializeMediaPlayer();
+
+    /** Skip to next media file */
+    abstract void next();
+
+    /** Rewind to beginning of media file or skip to previous media file*/
+    abstract void previous();
 
     /**
      * Accessor for current media file id
      * @return Current media id
      */
-    int getCurrentFile();
+    abstract int getCurrentFile();
 
     /**
      * Accessor for current media file name
      * @return Current media name
      */
-    String getCurrentFileName();
+    abstract String getCurrentFileName();
 }

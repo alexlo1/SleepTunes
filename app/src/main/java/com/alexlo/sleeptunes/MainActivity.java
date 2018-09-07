@@ -36,8 +36,9 @@ public class MainActivity extends AppCompatActivity {
     private FragmentManager fragmentManager;
     private FragmentTransaction ft;
 
-    // build in music files
+    // built in music files
     private static int[] files = {R.raw.the_name_of_life, R.raw.promise_of_the_world, R.raw.path_of_the_wind, R.raw.a_town_with_an_ocean_view};
+    private static String[] filenames = {"The Name of Life", "Promise of the World", "Path of the Wind", "A Town with an Ocean View"};
     public MediaController mediaPlayer;
 
     private SeekBar seekbar;
@@ -156,7 +157,7 @@ public class MainActivity extends AppCompatActivity {
      * Initializes the media player class
      */
     private void initializePlayer() {
-        mediaPlayer = new RawMediaController(context, files);
+        mediaPlayer = new RawMediaController(context, files, filenames);
     }
 
     /**

@@ -3,13 +3,16 @@
     <item
         android:id="@+id/menu_main"
         android:orderInCategory="100"
-        android:title="@string/menu_main"/>
+        android:title="@string/menu_main"
+        android:icon="@drawable/ic_home"/>
     <item
         android:id="@+id/menu_sleep"
         android:orderInCategory="200"
-        android:title="@string/menu_sleep"/>
+        android:title="@string/menu_sleep"
+        android:icon="@drawable/ic_sleep"/>
     <item
         android:id="@+id/menu_settings"
         android:orderInCategory="300"
-        android:title="@string/menu_settings"/>
+        android:title="@string/menu_settings"
+        android:icon="@drawable/ic_settings"/>
 </menu>
