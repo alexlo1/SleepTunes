@@ -260,8 +260,7 @@ public class MainActivity extends AppCompatActivity {
      * Initializes the sleep timer countdown
      */
     private void initializeSleepTimer() {
-        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
-        sleepTimer = Integer.parseInt(sharedPref.getString("sleep_timer_time_key", "1200")) * 60;
+        sleepTimer = getDurationPreference();
 
         // update the sleep timer countdown every second
         final Handler sleepTimerHandler = new Handler();
@@ -270,6 +269,11 @@ public class MainActivity extends AppCompatActivity {
                 if(countingDown) {
                     if(sleepTimer == 0) sleep();
                     sleepTimer--;
+                    if(getFadePreference()) {
+                        volumeFade();
+                    } else {
+                        undoVolumeFade();
+                    }
                 }
                 sleepTimerHandler.postDelayed(this, 1000);
             }
@@ -283,6 +287,22 @@ public class MainActivity extends AppCompatActivity {
     private void sleep() {
         finishAffinity();
         System.exit(0);
+    }
+
+    /**
+     * Gradually decreases the media player volume
+     */
+    private void volumeFade() {
+        int preference = getDurationPreference();
+        double currentVolume = sleepTimer * 1.0 / preference;
+        mediaPlayer.setVolume(currentVolume);
+    }
+
+    /**
+     * Sets volume back to full
+     */
+    private void undoVolumeFade() {
+        mediaPlayer.setVolume(1);
     }
 
     /**
@@ -336,5 +356,23 @@ public class MainActivity extends AppCompatActivity {
         if (sec.length() == 1) sec = '0' + sec;
         if (addMinuteZero && min.length() == 1) min = '0' + min;
         return getString(R.string.time_string, min, sec);
+    }
+
+    /**
+     * Gets the sleep timer duration specified in settings
+     * @return Integer containing the current sleep timer duration setting in seconds
+     */
+    private int getDurationPreference() {
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
+        return Integer.parseInt(sharedPref.getString("sleep_timer_time_key", "1200")) * 60;
+    }
+
+    /**
+     * Gets the sleep timer duration specified in settings
+     * @return Integer containing the current sleep timer duration setting in seconds
+     */
+    private boolean getFadePreference() {
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
+        return sharedPref.getBoolean("volume_fade_key", false);
     }
 }

@@ -25,7 +25,7 @@ public class SleepFragment extends Fragment {
 
     private Button sleepTimer;
     private Button resetTimer;
-    private String previousSetting;
+    private int previousSetting;
     private TextView nowPlaying;
 
     /**
@@ -62,7 +62,7 @@ public class SleepFragment extends Fragment {
      */
     private void initializeSleepTimer() {
         sleepTimer = rootView.findViewById(R.id.sleepTimer);
-        sleepTimer.setText(convertTime(Integer.parseInt(getDurationPreference()) * 60));
+        sleepTimer.setText(convertTime(getDurationPreference()));
         previousSetting = getDurationPreference();
 
         sleepTimer.setOnClickListener(new View.OnClickListener() {
@@ -90,7 +90,7 @@ public class SleepFragment extends Fragment {
      */
     private void updateSleepTimer() {
         if(previousSetting != getDurationPreference() && !activity.getCountDown()) {
-            activity.setSleepTimer(Integer.parseInt(getDurationPreference()) * 60);
+            activity.setSleepTimer(getDurationPreference());
             sleepTimer.setText(convertTime(activity.getSleepTimer()));
             previousSetting = getDurationPreference();
         }
@@ -104,9 +104,9 @@ public class SleepFragment extends Fragment {
         resetTimer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                activity.setSleepTimer(Integer.parseInt(getDurationPreference()) * 60);
+                activity.setSleepTimer(getDurationPreference());
                 activity.setCountDown(false);
-                sleepTimer.setText(convertTime(Integer.parseInt(getDurationPreference()) * 60));
+                sleepTimer.setText(convertTime(getDurationPreference()));
             }
         });
     }
@@ -128,11 +128,11 @@ public class SleepFragment extends Fragment {
 
     /**
      * Gets the sleep timer duration specified in settings
-     * @return String containing the current sleep timer duration setting in minutes
+     * @return Integer containing the current sleep timer duration setting in seconds
      */
-    private String getDurationPreference() {
+    private int getDurationPreference() {
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
-        return sharedPref.getString("sleep_timer_time_key", "1200");
+        return Integer.parseInt(sharedPref.getString("sleep_timer_time_key", "1200")) * 60;
     }
 
     /**

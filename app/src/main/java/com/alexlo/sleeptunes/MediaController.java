@@ -39,6 +39,14 @@ public abstract class MediaController {
     }
 
     /**
+     * Sets the volume of the media player
+     * @param volume Volume scalar (0 to 1)
+     */
+    public void setVolume(double volume) {
+        mp.setVolume((float) volume, (float) volume);
+    }
+
+    /**
      * Accessor for current media file time
      * @return Current media time in seconds
      */
