@@ -13,6 +13,7 @@
         android:layout_marginTop="10dp"
         android:text="@string/now_playing"
         android:textSize="20sp"
+        android:textColor="@color/black_text"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
@@ -22,6 +23,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="20sp"
+        android:textColor="@color/black_text"
         app:layout_constraintTop_toBottomOf="@id/text"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
@@ -36,7 +38,7 @@
         android:background="@drawable/solid_circle_with_border"
         android:gravity="center"
         android:text="@string/sleep_timer_text"
-        android:textColor="@color/white_text"
+        android:textColor="@color/black_text"
         android:textSize="48sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -51,6 +53,7 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:text="@string/reset_sleep_timer_text"
+        android:textColor="@color/black_text"
         android:background="@drawable/rectangle_border"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

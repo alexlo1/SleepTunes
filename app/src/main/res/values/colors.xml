@@ -4,6 +4,14 @@
     <color name="colorPrimaryDark">#2e5aa0</color>
     <color name="colorAccent">#8554ea</color>
 
-    <color name="white_text">#eeeeee</color>
-    <color name="white">#ffffff</color>
+    <color name="white_text">#80eeeeee</color>
+    <color name="white">#80ffffff</color>
+    <color name="black_text">#80111111</color>
+    <color name="black">#80000000</color>
+
+    <color name="clear">#00ffffff</color>
+    <color name="almost_clear">#30ffffff</color>
+
+    <color name="pink">#80e169f2</color>
+    <color name="blue">#8056c2ef</color>
 </resources>
