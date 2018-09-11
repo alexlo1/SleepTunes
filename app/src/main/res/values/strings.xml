@@ -26,7 +26,6 @@
     <string name="sleep_timer_settings_title">Sleep Timer</string>
     <string name="sleep_timer_time_title">Sleep Timer Duration</string>
     <string name="sleep_timer_time_summary">Sets the duration of the sleep timer</string>
-    <string name="sleep_timer_time_dialog_title">Sleep Timer Duration</string>
 
     <string name="display_settings_title">Display</string>
     <string name="dark_mode_title">Night Mode (In Progress)</string>
@@ -35,5 +34,8 @@
     <string name="audio_settings_title">Audio</string>
     <string name="volume_fade_title">Volume Fade (In Progress)</string>
     <string name="volume_fade_summary">Volume gradually decreases as sleep timer runs</string>
+    <string name="media_settings_title">Media</string>
+    <string name="media_source_title">Media Source</string>
+    <string name="media_source_summary">Selects the source of the audio played</string>
 
 </resources>

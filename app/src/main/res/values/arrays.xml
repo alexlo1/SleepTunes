@@ -3,11 +3,13 @@
 
     <string-array name="media_source_entries">
         <item>Device Content</item>
+        <item>Youtube</item>
         <item>Studio Ghibli Piano</item>
     </string-array>
 
     <string-array name="media_source_entry_values">
         <item>device</item>
+        <item>youtube</item>
         <item>ghibli</item>
     </string-array>
 

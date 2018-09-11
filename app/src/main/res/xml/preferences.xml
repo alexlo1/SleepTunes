@@ -3,6 +3,19 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <PreferenceCategory
+        android:title="@string/media_settings_title">
+
+        <ListPreference
+            android:key="media_source_key"
+            android:title="@string/media_source_title"
+            android:summary="@string/media_source_summary"
+            android:entries="@array/media_source_entries"
+            android:entryValues="@array/media_source_entry_values"
+            android:dialogTitle="@string/media_source_title" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
         android:title="@string/sleep_timer_settings_title">
 
         <ListPreference
@@ -11,7 +24,7 @@
             android:summary="@string/sleep_timer_time_summary"
             android:entries="@array/sleep_timer_time_entries"
             android:entryValues="@array/sleep_timer_time_entry_values"
-            android:dialogTitle="@string/sleep_timer_time_dialog_title" />
+            android:dialogTitle="@string/sleep_timer_time_title" />
 
     </PreferenceCategory>
 
