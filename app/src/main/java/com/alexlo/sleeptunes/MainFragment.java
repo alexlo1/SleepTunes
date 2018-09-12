@@ -100,7 +100,9 @@ public class MainFragment extends Fragment
     public void onInitializationSuccess(YouTubePlayer.Provider provider, YouTubePlayer player,
                                         boolean wasRestored) {
         this.player = player;
-        if (!wasRestored) player.cueVideo("7LEmer7wwHI");
+        if (!wasRestored) {
+            player.cueVideo(YouTubeMediaController.GHIBLI_LINK1);
+        }
     }
 
     /**
