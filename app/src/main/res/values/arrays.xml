@@ -2,7 +2,7 @@
 <resources>
 
     <string-array name="media_source_entries">
-        <item>Youtube</item>
+        <item>Youtube (Internet)</item>
         <item>Studio Ghibli Piano</item>
     </string-array>
 

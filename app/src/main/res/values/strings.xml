@@ -40,6 +40,6 @@
 
     <string name="audio_settings_title">Audio</string>
     <string name="volume_fade_key">volume_fade_key</string>
-    <string name="volume_fade_title">Volume Fade (In Progress)</string>
+    <string name="volume_fade_title">Volume Fade</string>
     <string name="volume_fade_summary">Volume gradually decreases as sleep timer runs</string>
 </resources>

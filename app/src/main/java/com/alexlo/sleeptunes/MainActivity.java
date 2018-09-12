@@ -297,7 +297,7 @@ public class MainActivity extends AppCompatActivity {
      */
     private void volumeFade() {
         int preference = getDurationPreference();
-        double currentVolume = sleepTimer * 1.0 / preference;
+        double currentVolume = Math.pow(sleepTimer * 1.0 / preference, 3);
         mediaPlayer.setVolume(currentVolume);
     }
 
