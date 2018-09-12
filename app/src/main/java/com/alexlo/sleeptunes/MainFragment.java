@@ -21,7 +21,8 @@ import com.google.android.youtube.player.*;
  * Contains YouTube player option
  */
 public class MainFragment extends Fragment
-    implements com.google.android.youtube.player.YouTubePlayer.OnInitializedListener {
+    implements com.google.android.youtube.player.YouTubePlayer.OnInitializedListener,
+               com.google.android.youtube.player.YouTubePlayer.PlaybackEventListener {
 
     private MainActivity activity;
     private Context context;
@@ -91,36 +92,6 @@ public class MainFragment extends Fragment
     }
 
     /**
-     * Called when initialization of the player succeeds
-     * @param provider The provider initializing the player
-     * @param player The player that controls video playback
-     * @param wasRestored True if the user should expect to resume from a saved state
-     */
-    @Override
-    public void onInitializationSuccess(YouTubePlayer.Provider provider, YouTubePlayer player,
-                                        boolean wasRestored) {
-        this.player = player;
-        if (!wasRestored) {
-            player.cueVideo(YouTubeMediaController.GHIBLI_LINK1);
-        }
-    }
-
-    /**
-     * Called when initialization of the player fails
-     * @param provider The provider initializing the player
-     * @param errorReason The reason for the failure, and with potential resolutions to this failure
-     */
-    @Override
-    public void onInitializationFailure(YouTubePlayer.Provider provider,
-                                        YouTubeInitializationResult errorReason) {
-        if (errorReason.isUserRecoverableError()) {
-            errorReason.getErrorDialog(activity, 1).show();
-        } else {
-            Toast.makeText(activity, errorReason.toString(), Toast.LENGTH_LONG).show();
-        }
-    }
-
-    /**
      * Show youtube player if youtube source is selected in settings
      * @param hidden True if the fragment is hidden
      */
@@ -131,6 +102,7 @@ public class MainFragment extends Fragment
                 ft.show(youTubeFragment);
             } else {
                 ft.hide(youTubeFragment);
+                activity.setPlayButton(false);
             }
             ft.commit();
         }
@@ -152,5 +124,71 @@ public class MainFragment extends Fragment
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
         return sharedPref.getString(getString(R.string.media_source_key), "ghibli");
     }
+
+
+    /**
+     * Called when initialization of the player succeeds
+     * Required by OnInitializedListener interface
+     * @param provider The provider initializing the player
+     * @param player The player that controls video playback
+     * @param wasRestored True if the user should expect to resume from a saved state
+     */
+    @Override
+    public void onInitializationSuccess(YouTubePlayer.Provider provider, YouTubePlayer player,
+                                        boolean wasRestored) {
+        this.player = player;
+        activity.initializeYouTube(player);
+        player.setPlaybackEventListener(this);
+        if (!wasRestored) {
+            player.cueVideo(YouTubeMediaController.GHIBLI_LINK1);
+        }
+    }
+
+    /**
+     * Called when initialization of the player fails
+     * Required by OnInitializedListener interface
+     * @param provider The provider initializing the player
+     * @param errorReason The reason for the failure, and with potential resolutions to this failure
+     */
+    @Override
+    public void onInitializationFailure(YouTubePlayer.Provider provider,
+                                        YouTubeInitializationResult errorReason) {
+        if (errorReason.isUserRecoverableError()) {
+            errorReason.getErrorDialog(activity, 1).show();
+        } else {
+            Toast.makeText(activity, errorReason.toString(), Toast.LENGTH_LONG).show();
+        }
+    }
+
+    /**
+     * Required by PlaybackEventListener interface
+     * @param isBuffering True if the player is buffering
+     */
+    public void onBuffering(boolean isBuffering) {}
+
+    /**
+     * Required by PlaybackEventListener interface
+     */
+    public void onPaused() {
+        activity.setPlayButton(false);
+    }
+
+    /**
+     * Required by PlaybackEventListener interface
+     */
+    public void onPlaying() {
+        activity.setPlayButton(true);
+    }
+
+    /**
+     * Required by PlaybackEventListener interface
+     * @param newPositionMillis The time in milliseconds to which the player has seeked
+     */
+    public void onSeekTo(int newPositionMillis) {}
+
+    /**
+     * Required by PlaybackEventListener interface
+     */
+    public void onStopped() {}
 
 }

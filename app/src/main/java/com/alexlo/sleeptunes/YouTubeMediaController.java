@@ -24,16 +24,25 @@ public class YouTubeMediaController extends MediaController {
 
     }
 
+    /**
+     * Checks if media is playing
+     * @return True if media is playing
+     */
+    @Override
+    public boolean isPlaying() {
+        return player.isPlaying();
+    }
+
     /** Start/resume playing media */
     @Override
     public void play() {
-        if(player != null) player.play();
+        if(player != null && !player.isPlaying()) player.play();
     }
 
     /** Pause currently playing media */
     @Override
     public void pause() {
-        if(player != null) player.pause();
+        if(player != null && player.isPlaying()) player.pause();
     }
 
     /** Stops and clears current media */

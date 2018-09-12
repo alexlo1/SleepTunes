@@ -7,6 +7,14 @@ public abstract class MediaController {
 
     protected MediaPlayer mp;
 
+    /**
+     * Checks if media is playing
+     * @return True if media is playing
+     */
+    public boolean isPlaying() {
+        return mp.isPlaying();
+    }
+
     /** Start/resume playing media */
     public void play() {
         if (mp != null && !mp.isPlaying()) {

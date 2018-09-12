@@ -43,6 +43,9 @@ public class MainActivity extends AppCompatActivity {
     private static int[] files = {R.raw.the_name_of_life, R.raw.promise_of_the_world, R.raw.path_of_the_wind, R.raw.a_town_with_an_ocean_view};
     private static String[] filenames = {"The Name of Life", "Promise of the World", "Path of the Wind", "A Town with an Ocean View"};
     public MediaController mediaPlayer;
+    private RawMediaController rawMP;
+    private YouTubeMediaController ytMP;
+    private boolean youtubeInitialized = false;
 
     private SeekBar seekbar;
     private boolean seeking = false;
@@ -157,10 +160,35 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     * Initializes the raw media player
+     * Initializes the media player
      */
     private void initializePlayer() {
-        mediaPlayer = new RawMediaController(context, files, filenames);
+        rawMP = new RawMediaController(context, files, filenames);
+        mediaPlayer = rawMP;
+
+        // update the media source every 0.1 seconds
+        final Handler mediaSourceHandler = new Handler();
+        final Runnable mediaSourceRunnable = new Runnable() {
+            public void run() {
+                if(getSourcePreference().equals("youtube") && youtubeInitialized) {
+                    mediaPlayer = ytMP;
+                } else {
+                    mediaPlayer = rawMP;
+                }
+                mediaSourceHandler.postDelayed(this, 100);
+            }
+        };
+        mediaSourceHandler.postDelayed(mediaSourceRunnable, 100);
+    }
+
+    /**
+     * Initializes the youtube player
+     */
+    public void initializeYouTube(YouTubePlayer player) {
+        if(player != null) {
+            ytMP = new YouTubeMediaController(player);
+            youtubeInitialized = true;
+        }
     }
 
     /**
@@ -224,6 +252,7 @@ public class MainActivity extends AppCompatActivity {
 
                 @Override
                 public void onStartTrackingTouch(SeekBar seekBar) {
+                    seekbar.setMax(mediaPlayer.getDuration());
                     seeking = true;
                 }
 
@@ -293,19 +322,12 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     * Gradually decreases the media player volume
+     * Sets the status of the play/pause button
+     * @param checked True if the player is playing (displays pause icon)
      */
-    private void volumeFade() {
-        int preference = getDurationPreference();
-        double currentVolume = Math.pow(sleepTimer * 1.0 / preference, 3);
-        mediaPlayer.setVolume(currentVolume);
-    }
-
-    /**
-     * Sets volume back to full
-     */
-    private void undoVolumeFade() {
-        mediaPlayer.setVolume(1);
+    public void setPlayButton(boolean checked) {
+        final ToggleButton playButton = findViewById(R.id.playButton);
+        playButton.setChecked(checked);
     }
 
     /**
@@ -348,6 +370,22 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
+     * Gradually decreases the media player volume
+     */
+    private void volumeFade() {
+        int preference = getDurationPreference();
+        double currentVolume = Math.pow(sleepTimer * 1.0 / preference, 3);
+        mediaPlayer.setVolume(currentVolume);
+    }
+
+    /**
+     * Sets volume back to full
+     */
+    private void undoVolumeFade() {
+        mediaPlayer.setVolume(1);
+    }
+
+    /**
      * Converts an integer number of seconds into a time string
      * @param t Integer number of seconds
      * @param addMinuteZero Boolean detailing whether or not to add a 0 to x:xx, i.e. 0x:xx
@@ -378,4 +416,14 @@ public class MainActivity extends AppCompatActivity {
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
         return sharedPref.getBoolean(getString(R.string.volume_fade_key), false);
     }
+
+    /**
+     * Gets the media source specified in settings
+     * @return String containing the chosen media source
+     */
+    private String getSourcePreference() {
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
+        return sharedPref.getString(getString(R.string.media_source_key), "ghibli");
+    }
+
 }
