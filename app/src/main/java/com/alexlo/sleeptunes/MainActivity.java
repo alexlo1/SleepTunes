@@ -10,6 +10,7 @@ import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.design.widget.BottomNavigationView;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -17,6 +18,8 @@ import android.widget.Button;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.ToggleButton;
+
+import com.google.android.youtube.player.YouTubePlayer;
 
 /**
  * Main activity class
@@ -40,6 +43,8 @@ public class MainActivity extends AppCompatActivity {
     private static int[] files = {R.raw.the_name_of_life, R.raw.promise_of_the_world, R.raw.path_of_the_wind, R.raw.a_town_with_an_ocean_view};
     private static String[] filenames = {"The Name of Life", "Promise of the World", "Path of the Wind", "A Town with an Ocean View"};
     public MediaController mediaPlayer;
+    private RawMediaController rawMP;
+    private YouTubeMediaController ytMP;
 
     private SeekBar seekbar;
     private boolean seeking = false;
@@ -61,12 +66,12 @@ public class MainActivity extends AppCompatActivity {
 
         active = true;
 
+        setupNavigationView();
+
         initializePlayer();
         initializeControls();
         initializeSeekBar();
         initializeSleepTimer();
-
-        setupNavigationView();
     }
 
     /**
@@ -157,7 +162,13 @@ public class MainActivity extends AppCompatActivity {
      * Initializes the media player class
      */
     private void initializePlayer() {
-        mediaPlayer = new RawMediaController(context, files, filenames);
+        rawMP = new RawMediaController(context, files, filenames);
+        mediaPlayer = rawMP;
+    }
+
+    public void initializeYouTubePlayer(YouTubePlayer player) {
+        ytMP = new YouTubeMediaController(player);
+        mediaPlayer = ytMP;
     }
 
     /**
@@ -364,7 +375,7 @@ public class MainActivity extends AppCompatActivity {
      */
     private int getDurationPreference() {
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
-        return Integer.parseInt(sharedPref.getString("sleep_timer_time_key", "1200")) * 60;
+        return Integer.parseInt(sharedPref.getString(getString(R.string.sleep_timer_time_key), "1200")) * 60;
     }
 
     /**
@@ -373,6 +384,15 @@ public class MainActivity extends AppCompatActivity {
      */
     private boolean getFadePreference() {
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
-        return sharedPref.getBoolean("volume_fade_key", false);
+        return sharedPref.getBoolean(getString(R.string.volume_fade_key), false);
+    }
+
+    /**
+     * Gets the media source specified in settings
+     * @return String containing the chosen media source
+     */
+    private String getSourcePreference() {
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
+        return sharedPref.getString(getString(R.string.media_source_key), "ghibli");
     }
 }

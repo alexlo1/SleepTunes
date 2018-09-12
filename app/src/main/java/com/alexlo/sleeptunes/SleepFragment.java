@@ -21,7 +21,6 @@ public class SleepFragment extends Fragment {
     private MainActivity activity;
     private Context context;
     private View rootView;
-    private boolean active = false;
 
     private Button sleepTimer;
     private Button resetTimer;
@@ -40,7 +39,6 @@ public class SleepFragment extends Fragment {
         rootView = inflater.inflate(R.layout.fragment_sleep, container, false);
         activity = (MainActivity) getActivity();
         context = getActivity().getApplicationContext();
-        active = true;
 
         initializeSleepTimer();
         initializeResetButton();
@@ -132,7 +130,7 @@ public class SleepFragment extends Fragment {
      */
     private int getDurationPreference() {
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
-        return Integer.parseInt(sharedPref.getString("sleep_timer_time_key", "1200")) * 60;
+        return Integer.parseInt(sharedPref.getString(getString(R.string.sleep_timer_time_key), "1200")) * 60;
     }
 
     /**

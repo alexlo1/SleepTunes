@@ -6,7 +6,7 @@
         android:title="@string/media_settings_title">
 
         <ListPreference
-            android:key="media_source_key"
+            android:key="@string/media_source_key"
             android:title="@string/media_source_title"
             android:summary="@string/media_source_summary"
             android:entries="@array/media_source_entries"
@@ -19,7 +19,7 @@
         android:title="@string/sleep_timer_settings_title">
 
         <ListPreference
-            android:key="sleep_timer_time_key"
+            android:key="@string/sleep_timer_time_key"
             android:title="@string/sleep_timer_time_title"
             android:summary="@string/sleep_timer_time_summary"
             android:entries="@array/sleep_timer_time_entries"
@@ -32,7 +32,7 @@
         android:title="@string/display_settings_title">
 
         <CheckBoxPreference
-            android:key="dark_mode_key"
+            android:key="@string/dark_mode_key"
             android:title="@string/dark_mode_title"
             android:summary="@string/dark_mode_summary" />
 
@@ -42,7 +42,7 @@
         android:title="@string/audio_settings_title">
 
         <CheckBoxPreference
-            android:key="volume_fade_key"
+            android:key="@string/volume_fade_key"
             android:title="@string/volume_fade_title"
             android:summary="@string/volume_fade_summary" />
 

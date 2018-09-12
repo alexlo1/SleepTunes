@@ -1,25 +1,37 @@
 package com.alexlo.sleeptunes;
 
 import android.app.Fragment;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
+import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import com.google.android.youtube.player.*;
 
 /**
  * Main page fragment
- * Doesn't do much
+ * Contains YouTube player option
  */
-public class MainFragment extends Fragment {
+public class MainFragment extends Fragment
+    implements com.google.android.youtube.player.YouTubePlayer.OnInitializedListener {
 
     private MainActivity activity;
     private Context context;
     private View rootView;
-    private boolean active = false;
+
+    private FragmentManager fragmentManager;
+    private FragmentTransaction ft;
+    private Fragment youTubeFragment;
+
+    private YouTubePlayer player;
 
     private TextView nowPlaying;
 
@@ -35,9 +47,11 @@ public class MainFragment extends Fragment {
         rootView = inflater.inflate(R.layout.fragment_main, container, false);
         activity = (MainActivity) getActivity();
         context = getActivity().getApplicationContext();
-        active = true;
+
+        fragmentManager = getChildFragmentManager();
 
         initializeDisplay();
+        initializeYoutube();
 
         return rootView;
     }
@@ -63,4 +77,79 @@ public class MainFragment extends Fragment {
         };
         nowPlayingHandler.postDelayed(nowPlayingRunnable, 100);
     }
+
+    /**
+     * Initializes the youtube player
+     */
+    private void initializeYoutube() {
+        youTubeFragment = fragmentManager.findFragmentById(R.id.youtube_fragment);
+        ((YouTubePlayerFragment) youTubeFragment).initialize(YouTubeMediaController.YOUTUBE_API_KEY, this);
+
+        ft = fragmentManager.beginTransaction();
+        if(!getSourcePreference().equals("youtube")) ft.hide(youTubeFragment);
+        ft.commit();
+    }
+
+    /**
+     * Called when initialization of the player succeeds
+     * @param provider The provider initializing the player
+     * @param player The player that controls video playback
+     * @param wasRestored True if the user should expect to resume from a saved state
+     */
+    @Override
+    public void onInitializationSuccess(YouTubePlayer.Provider provider, YouTubePlayer player,
+                                        boolean wasRestored) {
+        this.player = player;
+        activity.initializeYouTubePlayer(player);
+        if (!wasRestored) player.cueVideo("7LEmer7wwHI");
+    }
+
+    /**
+     * Called when initialization of the player fails
+     * @param provider The provider initializing the player
+     * @param errorReason The reason for the failure, and with potential resolutions to this failure
+     */
+    @Override
+    public void onInitializationFailure(YouTubePlayer.Provider provider,
+                                        YouTubeInitializationResult errorReason) {
+        if (errorReason.isUserRecoverableError()) {
+            errorReason.getErrorDialog(activity, 1).show();
+        } else {
+            Toast.makeText(activity, errorReason.toString(), Toast.LENGTH_LONG).show();
+        }
+    }
+
+    /**
+     *
+     * @param hidden True if the fragment is hidden
+     */
+    public void onHiddenChanged(boolean hidden) {
+        if(!hidden) {
+            ft = fragmentManager.beginTransaction();
+            if (getSourcePreference().equals("youtube")) {
+                ft.show(youTubeFragment);
+            } else {
+                ft.hide(youTubeFragment);
+            }
+            ft.commit();
+        }
+    }
+
+    /**
+     * Gets the youtube player after it has been initialized
+     * @return YouTube player
+     */
+    public YouTubePlayer getYouTubePlayer() {
+        return player;
+    }
+
+    /**
+     * Gets the media source specified in settings
+     * @return String containing the chosen media source
+     */
+    private String getSourcePreference() {
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
+        return sharedPref.getString(getString(R.string.media_source_key), "ghibli");
+    }
+
 }
