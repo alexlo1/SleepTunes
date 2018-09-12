@@ -100,7 +100,6 @@ public class MainFragment extends Fragment
     public void onInitializationSuccess(YouTubePlayer.Provider provider, YouTubePlayer player,
                                         boolean wasRestored) {
         this.player = player;
-        activity.initializeYouTubePlayer(player);
         if (!wasRestored) player.cueVideo("7LEmer7wwHI");
     }
 
@@ -120,7 +119,7 @@ public class MainFragment extends Fragment
     }
 
     /**
-     *
+     * Show youtube player if youtube source is selected in settings
      * @param hidden True if the fragment is hidden
      */
     public void onHiddenChanged(boolean hidden) {
