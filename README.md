@@ -16,7 +16,10 @@ a different screen and will pause the video.
 - YouTube API
 
 ### To Do
+- Fix continuous playing when switching media sources
+- Allow modification of YouTube playlist
 - Allow playing audio from device
 - Visual improvements
+- Shrink media control bar
 - Dark Theme
 

@@ -5,11 +5,10 @@ import com.google.android.youtube.player.YouTubePlayer;
 public class YouTubeMediaController extends MediaController {
 
     public static final String YOUTUBE_API_KEY = "AIzaSyBuzUdW70LFH_EbDhizBzzxZnRakcEwwaI";
-    public static final String GHIBLI_LINK1 = "7LEmer7wwHI";
-    public static final String GHIBLI_LINK2 = "9YNws6yE9Ns";
+    public static final String[] links = {"7LEmer7wwHI", "iBfk37Fa3H0", "z3PpphdrEmU", "9YNws6yE9Ns"};
 
     private YouTubePlayer player;
-    private int currentVideo = 1;
+    private int currentVideo = 0;
 
     /**
      * Constructor for youtube media controller
@@ -17,11 +16,12 @@ public class YouTubeMediaController extends MediaController {
      */
     public YouTubeMediaController(YouTubePlayer player) {
         this.player = player;
+        initializeMediaPlayer();
     }
 
     /** Initialize the media player */
     public void initializeMediaPlayer() {
-
+        player.cueVideo(YouTubeMediaController.links[0]);
     }
 
     /**
@@ -54,20 +54,12 @@ public class YouTubeMediaController extends MediaController {
     /** Skip to next media file */
     public void next() {
         if(player != null) {
+            currentVideo = (currentVideo + 1) % links.length;
             if(player.isPlaying()) {
-                if(currentVideo == 1) {
-                    player.loadVideo(GHIBLI_LINK2);
-                } else {
-                    player.loadVideo(GHIBLI_LINK1);
-                }
+                player.loadVideo(links[currentVideo]);
             } else {
-                if(currentVideo == 1) {
-                    player.cueVideo(GHIBLI_LINK2);
-                } else {
-                    player.cueVideo(GHIBLI_LINK1);
-                }
+                player.cueVideo(links[currentVideo]);
             }
-            currentVideo = currentVideo == 1 ? 2 : 1;
         }
     }
 
@@ -75,7 +67,12 @@ public class YouTubeMediaController extends MediaController {
     public void previous() {
         if(player != null) {
             if (getTime() <= 3) {
-                next();
+                currentVideo = (currentVideo + links.length - 1) % links.length;
+                if(player.isPlaying()) {
+                    player.loadVideo(links[currentVideo]);
+                } else {
+                    player.cueVideo(links[currentVideo]);
+                }
             } else {
                 seekTo(0);
             }

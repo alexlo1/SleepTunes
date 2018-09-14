@@ -139,9 +139,6 @@ public class MainFragment extends Fragment
         this.player = player;
         activity.initializeYouTube(player);
         player.setPlaybackEventListener(this);
-        if (!wasRestored) {
-            player.cueVideo(YouTubeMediaController.GHIBLI_LINK1);
-        }
     }
 
     /**
