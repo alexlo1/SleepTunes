@@ -101,8 +101,8 @@ public class MainFragment extends Fragment
             if (getSourcePreference().equals("youtube")) {
                 ft.show(youTubeFragment);
             } else {
+                if(!youTubeFragment.isHidden()) activity.setPlayButton(false);
                 ft.hide(youTubeFragment);
-                activity.setPlayButton(false);
             }
             ft.commit();
         }
