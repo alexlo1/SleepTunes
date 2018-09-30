@@ -23,10 +23,14 @@
     <string name="reset_sleep_timer_text">Reset Timer</string>
 
     <!-- Settings Strings -->
-    <string name="media_source_key">media_source_key</string>
     <string name="media_settings_title">Media</string>
+    <string name="media_source_key">media_source_key</string>
     <string name="media_source_title">Media Source</string>
     <string name="media_source_summary">Selects the source of the audio played</string>
+
+    <string name="youtube_playlist_key">youtube_playlist</string>
+    <string name="youtube_playlist_title">YouTube Playlist</string>
+    <string name="youtube_playlist_summary">Modify the YouTube playlist</string>
 
     <string name="sleep_timer_settings_title">Sleep Timer</string>
     <string name="sleep_timer_time_key">sleep_timer_time_key</string>
@@ -42,4 +46,5 @@
     <string name="volume_fade_key">volume_fade_key</string>
     <string name="volume_fade_title">Volume Fade</string>
     <string name="volume_fade_summary">Volume gradually decreases as sleep timer runs</string>
+
 </resources>

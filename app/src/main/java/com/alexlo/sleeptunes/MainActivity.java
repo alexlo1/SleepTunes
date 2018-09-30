@@ -173,9 +173,11 @@ public class MainActivity extends AppCompatActivity {
                 if(getSourcePreference().equals("youtube") && youtubeInitialized) {
                     mediaPlayer = ytMP;
                     rawMP.pause();
-                } else {
+                } else if(youtubeInitialized) {
                     mediaPlayer = rawMP;
                     ytMP.pause();
+                } else {
+                    mediaPlayer = rawMP;
                 }
                 mediaSourceHandler.postDelayed(this, 100);
             }

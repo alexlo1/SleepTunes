@@ -17,7 +17,7 @@ public class VideoId {
         this.id = id;
     }
 
-    public String getWord() {
+    public String getId() {
         return this.id;
     }
 }
