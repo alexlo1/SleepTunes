@@ -28,10 +28,6 @@
     <string name="media_source_title">Media Source</string>
     <string name="media_source_summary">Selects the source of the audio played</string>
 
-    <string name="youtube_playlist_key">youtube_playlist</string>
-    <string name="youtube_playlist_title">YouTube Playlist</string>
-    <string name="youtube_playlist_summary">Modify the YouTube playlist</string>
-
     <string name="sleep_timer_settings_title">Sleep Timer</string>
     <string name="sleep_timer_time_key">sleep_timer_time_key</string>
     <string name="sleep_timer_time_title">Sleep Timer Duration</string>

@@ -13,16 +13,6 @@
             android:entryValues="@array/media_source_entry_values"
             android:dialogTitle="@string/media_source_title" />
 
-        <Preference
-            android:key="@string/youtube_playlist_key"
-            android:title="@string/youtube_playlist_title"
-            android:summary="@string/youtube_playlist_summary">
-            <intent
-                android:action="android.intent.action.VIEW"
-                android:targetPackage="com.alexlo.sleeptunes"
-                android:targetClass="com.alexlo.sleeptunes.VideoListActivity" />
-        </Preference>
-
     </PreferenceCategory>
 
     <PreferenceCategory

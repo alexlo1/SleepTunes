@@ -17,7 +17,6 @@ public class SettingsFragment extends PreferenceFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        // layout is built in preference layout
         addPreferencesFromResource(R.xml.preferences);
     }
 }
