@@ -15,4 +15,9 @@
         android:orderInCategory="300"
         android:title="@string/menu_settings"
         android:icon="@drawable/ic_settings"/>
+    <item
+        android:id="@+id/menu_playlist"
+        android:orderInCategory="400"
+        android:title="@string/menu_playlist"
+        android:icon="@drawable/ic_playlist"/>
 </menu>

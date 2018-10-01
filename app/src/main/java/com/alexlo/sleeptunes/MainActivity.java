@@ -35,6 +35,7 @@ public class MainActivity extends AppCompatActivity {
     private MainFragment mainFragment;
     private SleepFragment sleepFragment;
     private SettingsFragment settingsFragment;
+    private VideoListFragment videoListFragment;
 
     private FragmentManager fragmentManager;
     private FragmentTransaction ft;
@@ -93,6 +94,7 @@ public class MainActivity extends AppCompatActivity {
         mainFragment = new MainFragment();
         sleepFragment = new SleepFragment();
         settingsFragment = new SettingsFragment();
+        videoListFragment = new VideoListFragment();
 
         // create and hide all fragments
         fragmentManager = getFragmentManager();
@@ -100,13 +102,16 @@ public class MainActivity extends AppCompatActivity {
         ft.add(R.id.container, mainFragment);
         ft.add(R.id.container, sleepFragment);
         ft.add(R.id.container, settingsFragment);
+        ft.add(R.id.container, videoListFragment);
         ft.hide(mainFragment);
         ft.hide(sleepFragment);
         ft.hide(settingsFragment);
+        ft.hide(videoListFragment);
         ft.commit();
 
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
         Menu menu = bottomNavigationView.getMenu();
+        BottomNavigationViewHelper.disableShiftMode(bottomNavigationView);
 
         // show the main fragment to start
         currentFragment = mainFragment;
@@ -140,6 +145,9 @@ public class MainActivity extends AppCompatActivity {
                 break;
             case R.id.menu_settings:
                 pushFragment(settingsFragment);
+                break;
+            case R.id.menu_playlist:
+                pushFragment(videoListFragment);
                 break;
         }
     }
