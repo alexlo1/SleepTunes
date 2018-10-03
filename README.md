@@ -16,9 +16,9 @@ a different screen and will pause the video.
 - YouTube API
 
 ### To Do
-- Allow modification of YouTube playlist
+- Allow modification of YouTube playlist (In progress)
+- Fix timer bar bug (caused when switching sources)
 - Allow playing audio from device
 - Visual improvements
-- Shrink media control bar
 - Dark Theme
 

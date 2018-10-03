@@ -2,10 +2,13 @@ package com.alexlo.sleeptunes;
 
 import com.google.android.youtube.player.YouTubePlayer;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class YouTubeMediaController extends MediaController {
 
     public static final String YOUTUBE_API_KEY = "AIzaSyBuzUdW70LFH_EbDhizBzzxZnRakcEwwaI";
-    public static final String[] links = {"7LEmer7wwHI", "iBfk37Fa3H0", "z3PpphdrEmU", "9YNws6yE9Ns"};
+    public static ArrayList<String> links;
 
     private YouTubePlayer player;
     private int currentVideo = 0;
@@ -16,12 +19,19 @@ public class YouTubeMediaController extends MediaController {
      */
     public YouTubeMediaController(YouTubePlayer player) {
         this.player = player;
+
+        links = new ArrayList<>();
+        links.add("7LEmer7wwHI");
+        links.add("iBfk37Fa3H0");
+        links.add("z3PpphdrEmU");
+        links.add("9YNws6yE9Ns");
+
         initializeMediaPlayer();
     }
 
     /** Initialize the media player */
     public void initializeMediaPlayer() {
-        player.cueVideo(YouTubeMediaController.links[0]);
+        player.cueVideo(YouTubeMediaController.links.get(0));
     }
 
     /**
@@ -54,11 +64,11 @@ public class YouTubeMediaController extends MediaController {
     /** Skip to next media file */
     public void next() {
         if(player != null) {
-            currentVideo = (currentVideo + 1) % links.length;
+            currentVideo = (currentVideo + 1) % links.size();
             if(player.isPlaying()) {
-                player.loadVideo(links[currentVideo]);
+                player.loadVideo(links.get(currentVideo));
             } else {
-                player.cueVideo(links[currentVideo]);
+                player.cueVideo(links.get(currentVideo));
             }
         }
     }
@@ -67,11 +77,11 @@ public class YouTubeMediaController extends MediaController {
     public void previous() {
         if(player != null) {
             if (getTime() <= 3) {
-                currentVideo = (currentVideo + links.length - 1) % links.length;
+                currentVideo = (currentVideo + links.size() - 1) % links.size();
                 if(player.isPlaying()) {
-                    player.loadVideo(links[currentVideo]);
+                    player.loadVideo(links.get(currentVideo));
                 } else {
-                    player.cueVideo(links[currentVideo]);
+                    player.cueVideo(links.get(currentVideo));
                 }
             } else {
                 seekTo(0);
@@ -137,5 +147,16 @@ public class YouTubeMediaController extends MediaController {
      */
     public String getCurrentFileName() {
         return "";
+    }
+
+    /**
+     *
+     * @param list
+     */
+    public void setLinks(List<VideoId> list) {
+        links = new ArrayList<>();
+        for(VideoId vid : list) {
+            links.add(vid.getId());
+        }
     }
 }

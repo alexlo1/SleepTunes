@@ -35,9 +35,15 @@ public abstract class VideoRoomDatabase extends RoomDatabase {
         @Override
         protected Void doInBackground(final Void... params) {
             dao.deleteAll();
-            VideoId id = new VideoId("Hello");
+            VideoId id;
+
+            id = new VideoId("7LEmer7wwHI");
             dao.insert(id);
-            id = new VideoId("World");
+            id = new VideoId("iBfk37Fa3H0");
+            dao.insert(id);
+            id = new VideoId("z3PpphdrEmU");
+            dao.insert(id);
+            id = new VideoId("9YNws6yE9Ns");
             dao.insert(id);
             return null;
         }

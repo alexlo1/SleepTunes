@@ -1,12 +1,9 @@
 package com.alexlo.sleeptunes;
 
 import android.app.Activity;
-import android.arch.lifecycle.Observer;
-import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.annotation.Nullable;
+import android.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -20,7 +17,10 @@ public class VideoListFragment extends Fragment {
 
     private Activity activity;
     private Context context;
-    private VideoViewModel videoViewModel;
+    private View rootView;
+
+    private RecyclerView recyclerView;
+    private VideoListAdapter adapter;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -30,25 +30,24 @@ public class VideoListFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        rootView =  inflater.inflate(R.layout.fragment_video_list, container, false);
         activity = getActivity();
-        context = activity.getApplicationContext();RecyclerView recyclerView = activity.findViewById(R.id.recyclerview);
-        final VideoListAdapter adapter = new VideoListAdapter(context);
+        context = activity.getApplicationContext();
+
+        recyclerView = rootView.findViewById(R.id.recyclerview);
+        adapter = new VideoListAdapter(context);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(context));
 
-        videoViewModel = ViewModelProviders.of(this).get(VideoViewModel.class);
-        videoViewModel.getAllWords().observe(this, new Observer<List<VideoId>>() {
-            @Override
-            public void onChanged(@Nullable final List<VideoId> ids) {
-                adapter.setIds(ids);
-            }
-        });
-
-        return inflater.inflate(R.layout.fragment_video_list, container, false);
+        return rootView;
     }
 
     public void onHiddenChanged(boolean hidden) {
 
+    }
+
+    public void setAdapter(List<VideoId> list) {
+        adapter.setIds(list);
     }
 
 }

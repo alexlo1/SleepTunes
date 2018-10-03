@@ -3,11 +3,14 @@ package com.alexlo.sleeptunes;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.arch.lifecycle.Observer;
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.design.widget.BottomNavigationView;
 import android.util.Log;
@@ -20,6 +23,8 @@ import android.widget.TextView;
 import android.widget.ToggleButton;
 
 import com.google.android.youtube.player.YouTubePlayer;
+
+import java.util.List;
 
 /**
  * Main activity class
@@ -56,6 +61,8 @@ public class MainActivity extends AppCompatActivity {
     private boolean countingDown;
     private int sleepTimer = 1200;
 
+    private VideoViewModel videoViewModel;
+
     /**
      * Called when activity is starting, initializes layout
      * @param savedInstanceState If non-null, previous state to reconstruct
@@ -74,6 +81,7 @@ public class MainActivity extends AppCompatActivity {
         initializeControls();
         initializeSeekBar();
         initializeSleepTimer();
+        initializePlaylistData();
     }
 
     /**
@@ -323,6 +331,17 @@ public class MainActivity extends AppCompatActivity {
             }
         };
         sleepTimerHandler.postDelayed(seekTimerRunnable, 1000);
+    }
+
+    private void initializePlaylistData() {
+        videoViewModel = ViewModelProviders.of(this).get(VideoViewModel.class);
+        videoViewModel.getAllWords().observe(this, new Observer<List<VideoId>>() {
+            @Override
+            public void onChanged(@Nullable final List<VideoId> ids) {
+                if(youtubeInitialized) ytMP.setLinks(ids);
+                videoListFragment.setAdapter(ids);
+            }
+        });
     }
 
     /**
